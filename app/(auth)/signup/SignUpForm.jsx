@@ -22,7 +22,8 @@ export default function SignUpForm() {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/authentication/check-email/`, 
         { email },
-        {headers: { "Content-Type": "application/json" }}
+        {headers: { "Content-Type": "application/json", 'X-CSRFToken': 'csrftoken'}
+      }
       );
       setEmailError(""); // Clear email error if available
     } catch (error) {
