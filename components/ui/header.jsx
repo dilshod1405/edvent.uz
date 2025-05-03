@@ -76,7 +76,7 @@ export default function Header() {
                 <li>
                   <Avatar 
                     alt={`${firstname} ${lastname}`} 
-                    src={photo ? `${photo}` : "/static/images/avatar/1.jpg"} 
+                    src={photo ? `${process.env.NEXT_PUBLIC_API_URL}${photo}` : photo} //`${process.env.NEXT_PUBLIC_API_URL}${photo}` : "/static/images/avatar/1.jpg"} 
                   />
                 </li>
               </>
