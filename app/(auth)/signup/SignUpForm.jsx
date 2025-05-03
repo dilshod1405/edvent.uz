@@ -53,13 +53,13 @@ export default function SignUpForm() {
 
     try {
       if (!firstname || !lastname || !email || !username || !password || !password2) {
-        setError("All fields are required.");
+        setError("Barcha maydonlarni to'ldiring!");
         setLoading(false);
         return;
       }
 
       if (emailError) {
-        setError("Please fix the email issue before proceeding.");
+        setError("Email allaqachon ro'yxatdan o'tgan.");
         setLoading(false);
         return;
       }
@@ -77,8 +77,8 @@ export default function SignUpForm() {
         }
       );
 
-      console.log("Backend Response Status:", response.status);
-      console.log("Backend Response Data:", response.data);
+      // console.log("Backend Response Status:", response.status);
+      // console.log("Backend Response Data:", response.data);
 
       if (response.status === 201 || response.status === 200) {
         setSuccessMessage("Ro'yxatdan o'tish muvaffaqiyatli yakunlandi! Iltimos, emailingizni tekshirib, tasdiqlash havolasini bosing.");
@@ -89,6 +89,7 @@ export default function SignUpForm() {
         setEmail("");
         setUsername("");
         setPassword("");
+        setPassword2("");
 
         setTimeout(() => {
           router.push(`/verify-email/${token}`);
@@ -191,8 +192,8 @@ export default function SignUpForm() {
             className="w-full form-input"
             placeholder="Parolni qayta kiriting"
             required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={password2}
+            onChange={(e) => setPassword2(e.target.value)}
           />
         </div>
       </div>
