@@ -30,9 +30,9 @@ export default function Header() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const photoFromStorage = localStorage.getItem("photo");
-        setFirstname(res.data.first_name);   // ✅ Correct field name
-        setLastname(res.data.last_name);      // ✅ Correct field name
-        setPhoto(photoFromStorage || "");     // fallback
+        setFirstname(res.data.first_name);
+        setLastname(res.data.last_name);
+        setPhoto(photoFromStorage || "");
         setIsAuthenticated(true);
       } catch (error) {
         console.error(error);
@@ -76,7 +76,7 @@ export default function Header() {
                 <li>
                   <Avatar 
                     alt={`${firstname} ${lastname}`} 
-                    src={photo ? `${process.env.NEXT_PUBLIC_API_URL}${photo}` : "/static/images/avatar/1.jpg"} 
+                    src={photo ? `${photo}` : "/static/images/avatar/1.jpg"} 
                   />
                 </li>
               </>
