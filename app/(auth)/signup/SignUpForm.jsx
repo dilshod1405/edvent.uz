@@ -10,6 +10,7 @@ export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState(""); // New state for email error
@@ -51,7 +52,7 @@ export default function SignUpForm() {
     setSuccessMessage(""); 
 
     try {
-      if (!firstname || !lastname || !email || !username || !password) {
+      if (!firstname || !lastname || !email || !username || !password || !password2) {
         setError("All fields are required.");
         setLoading(false);
         return;
@@ -72,6 +73,7 @@ export default function SignUpForm() {
           email,
           username,
           password,
+          password2
         }
       );
 
@@ -175,6 +177,19 @@ export default function SignUpForm() {
             type="password"
             className="w-full form-input"
             placeholder="Parol qo'ying"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-indigo-200/65">
+            Parolni qayta kiriting <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="password"
+            className="w-full form-input"
+            placeholder="Parolni qayta kiriting"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
