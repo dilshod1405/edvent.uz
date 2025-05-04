@@ -18,7 +18,6 @@ import Header from "@/components/ui/header";
         <Hero />
         <Workflows />
         <Features />
-        <Testimonials />
         <Cta />
       </>
     );
