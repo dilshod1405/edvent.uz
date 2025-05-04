@@ -192,7 +192,7 @@ export default function SignUpForm() {
             placeholder="Username kiriting"
             required
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleUsernameChange}
           />
           {usernameError && (
             <div className="mt-2 text-sm text-red-500">{usernameError}</div>
