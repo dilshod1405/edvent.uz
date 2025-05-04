@@ -33,7 +33,11 @@ const SignInForm = () => {
         router.replace("/api/dashboard");
       }
     } catch (error) {
-      setError(error.response?.data?.message || error.message);
+      if (error.response.status === 401) {
+        setError("Email yoki parol xato!");
+      } else {
+        setError("Xatolik yuz berdi!");
+      }
       setIsLoading(false);
     }
   }
