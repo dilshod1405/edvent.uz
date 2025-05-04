@@ -8,6 +8,7 @@ export default function SignUpForm() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -34,12 +35,36 @@ export default function SignUpForm() {
     }
   };
 
+  const checkUsernameAvailability = async (username) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/authentication/check-username/`, 
+        { username },
+        {headers: { "Content-Type": "application/json", 'X-CSRFToken': 'csrftoken'}
+      }
+      );
+      setUsernameError(""); // Clear username error if available
+    } catch (error) {
+      if (error.response?.data?.detail) {
+        setUsernameError(error.response.data.detail); // Set error if username exists
+      }
+    }
+  }
+
   // Handle input changes
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setEmailError(""); // Reset error message
     if (e.target.value) {
       checkEmailAvailability(e.target.value); // Check email availability on change
+    }
+  };
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+    setUsernameError(""); // Reset error message
+    if (e.target.value) {
+      checkUsernameAvailability(e.target.value); // Check username availability on change
     }
   };
 
@@ -169,6 +194,9 @@ export default function SignUpForm() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+          {usernameError && (
+            <div className="mt-2 text-sm text-red-500">{usernameError}</div>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium text-indigo-200/65">
