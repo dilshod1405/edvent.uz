@@ -10,7 +10,6 @@ export default function Workflows() {
     <section>
       <div className="max-w-6xl px-4 mx-auto sm:px-6">
         <div className="pb-12 md:pb-20">
-          {/* Section header */}
           <div className="max-w-3xl pb-12 mx-auto text-center md:pb-20">
             <div className="inline-flex items-center gap-3 pb-3 before:h-px before:w-8 before:bg-linear-to-r before:from-transparent before:to-indigo-200/50 after:h-px after:w-8 after:bg-linear-to-l after:from-transparent after:to-indigo-200/50">
               <span className="inline-flex text-transparent bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text">
@@ -24,15 +23,14 @@ export default function Workflows() {
               Kurslar quyidagidacha turlarga bo'linadi. O'zingizga kerakli bo'lgan yo'nalishni tanlang, agar savollaringiz bo'lsa telegram botimiz orqali bizga aloqaga chiqing
             </p>
           </div>
-          {/* Spotlight items */}
           <Spotlight className="grid items-start max-w-sm gap-6 mx-auto group lg:max-w-none lg:grid-cols-3">
-            {/* Card 1 */}
             <Link
+              data-aos="fade-up"
+              data-aos-delay={200}
               className="group/card relative h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-500/80 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 hover:after:opacity-20 group-hover:before:opacity-100"
               href="/foundations"
             >
               <div className="relative z-20 h-full overflow-hidden rounded-[inherit] bg-gray-950 after:absolute after:inset-0 after:bg-linear-to-br after:from-gray-900/50 after:via-gray-800/25 after:to-gray-900/50">
-                {/* Arrow */}
                 <div
                   className="absolute flex items-center justify-center w-8 h-8 text-gray-200 transition-opacity border rounded-full opacity-0 right-6 top-6 border-gray-700/50 bg-gray-800/65 group-hover/card:opacity-100"
                   aria-hidden="true"
@@ -49,7 +47,6 @@ export default function Workflows() {
                     />
                   </svg>
                 </div>
-                {/* Image */}
                 <Image
                   className="inline-flex"
                   src={WorflowImg01}
@@ -57,7 +54,6 @@ export default function Workflows() {
                   height={288}
                   alt="Workflow 01"
                 />
-                {/* Content */}
                 <div className="p-6">
                   <div className="mb-3">
                     <span className="btn-sm relative rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-gray-800/60">
@@ -67,18 +63,18 @@ export default function Workflows() {
                     </span>
                   </div>
                   <p className="text-indigo-200/65">
-                    Aynan bir dastur yoki instrumentdan foydalanishni o'rgatishga qaratilgan kurslarni o'z ichiga oladi. Masalan, Revit, Photoshop va boshqalar.
+                    Fundamental bilimlarni o'rgatishga mo'ljallangan o'quv kurslar. Batafsil ma'lumot.
                   </p>
                 </div>
               </div>
             </Link>
-            {/* Card 2 */}
             <Link
+              data-aos="fade-up"
+              data-aos-delay={200}
               className="group/card relative h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-500/80 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 hover:after:opacity-20 group-hover:before:opacity-100"
               href="/specialities"
             >
               <div className="relative z-20 h-full overflow-hidden rounded-[inherit] bg-gray-950 after:absolute after:inset-0 after:bg-linear-to-br after:from-gray-900/50 after:via-gray-800/25 after:to-gray-900/50">
-                {/* Arrow */}
                 <div
                   className="absolute flex items-center justify-center w-8 h-8 text-gray-200 transition-opacity border rounded-full opacity-0 right-6 top-6 border-gray-700/50 bg-gray-800/65 group-hover/card:opacity-100"
                   aria-hidden="true"
@@ -95,7 +91,6 @@ export default function Workflows() {
                     />
                   </svg>
                 </div>
-                {/* Image */}
                 <Image
                   className="inline-flex"
                   src={WorflowImg02}
@@ -103,7 +98,6 @@ export default function Workflows() {
                   height={288}
                   alt="Workflow 02"
                 />
-                {/* Content */}
                 <div className="p-6">
                   <div className="mb-3">
                     <span className="btn-sm relative rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-gray-800/60">
@@ -113,18 +107,18 @@ export default function Workflows() {
                     </span>
                   </div>
                   <p className="text-indigo-200/65">
-                    Ayni bir sohaning to'liq mutaxassislik kursini o'z ichiga oladi. Masalan, qurilish, dizayn, dasturlash va boshqalar.
+                    Barcha turdagi mutaxassislik kurslarni o'z ichiga olgan o'quv kurslar. Batafsil ma'lumot.
                   </p>
                 </div>
               </div>
             </Link>
-            {/* Card 3 */}
             <Link
+              data-aos="fade-up"
+              data-aos-delay={200}
               className="group/card relative h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-500/80 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 hover:after:opacity-20 group-hover:before:opacity-100"
               href="/tariffs"
             >
               <div className="relative z-20 h-full overflow-hidden rounded-[inherit] bg-gray-950 after:absolute after:inset-0 after:bg-linear-to-br after:from-gray-900/50 after:via-gray-800/25 after:to-gray-900/50">
-                {/* Arrow */}
                 <div
                   className="absolute flex items-center justify-center w-8 h-8 text-gray-200 transition-opacity border rounded-full opacity-0 right-6 top-6 border-gray-700/50 bg-gray-800/65 group-hover/card:opacity-100"
                   aria-hidden="true"
@@ -141,7 +135,6 @@ export default function Workflows() {
                     />
                   </svg>
                 </div>
-                {/* Image */}
                 <Image
                   className="inline-flex"
                   src={WorflowImg03}
@@ -149,7 +142,6 @@ export default function Workflows() {
                   height={288}
                   alt="Workflow 03"
                 />
-                {/* Content */}
                 <div className="p-6">
                   <div className="mb-3">
                     <span className="btn-sm relative rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-gray-800/60">
@@ -159,7 +151,7 @@ export default function Workflows() {
                     </span>
                   </div>
                   <p className="text-indigo-200/65">
-                    Bir nechta mutaxassislikni o'z ichiga qamrab olgan, professional darajadagi kurslarni o'z ichiga oladi. Masalan, qurilish - konstruksiya, ventilyatsiya.
+                    Arzonroq narxdagi, professional darajadagi mutaxassislik kurslar paketlarini o'z ichiga oladi. Batafsil ma'lumot.
                   </p>
                 </div>
               </div>

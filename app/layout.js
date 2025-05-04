@@ -2,7 +2,6 @@ import "./globals.css";
 import "./css/style.css";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
-
 import { AuthProvider } from "@/utils/AuthContext";
 
 const inter = Inter({
@@ -40,12 +39,18 @@ const nacelle = localFont({
 
 export const metadata = {
   title: "Edvent.uz",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <AuthProvider>
       <html lang="en">
+        <head>
+          <link rel="icon" href="/images/icon.png"/>
+        </head>
         <body
           className={`${inter.variable} ${nacelle.variable} bg-gray-950 font-inter text-base text-gray-200 antialiased`}
         >

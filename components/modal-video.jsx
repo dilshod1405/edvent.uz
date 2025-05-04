@@ -22,7 +22,7 @@ export default function ModalVideo({
     <div className="relative">
       {/* Secondary illustration */}
       <div
-        className="pointer-events-none absolute bottom-8 left-1/2 -z-10 -ml-28 -translate-x-1/2 translate-y-1/2"
+        className="absolute -translate-x-1/2 translate-y-1/2 pointer-events-none bottom-8 left-1/2 -z-10 -ml-28"
         aria-hidden="true"
       >
         <Image
@@ -36,12 +36,12 @@ export default function ModalVideo({
 
       {/* Video thumbnail */}
       <button
-        className="group relative flex items-center justify-center rounded-2xl focus:outline-hidden focus-visible:ring-3 focus-visible:ring-indigo-200"
+        className="relative flex items-center justify-center group rounded-2xl focus:outline-hidden focus-visible:ring-3 focus-visible:ring-indigo-200"
         onClick={() => {
           setModalOpen(true);
         }}
         aria-label="Watch the video"
-        data-aos="fade-up"
+        data-aos="zoom-in"
         data-aos-delay={200}
       >
         <figure className="relative overflow-hidden rounded-2xl before:absolute before:inset-0 before:-z-10 before:bg-linear-to-br before:from-gray-900 before:via-indigo-500/20 before:to-gray-900">
@@ -98,13 +98,13 @@ export default function ModalVideo({
       >
         <DialogBackdrop
           transition
-          className="fixed inset-0 z-99999 bg-black/70 transition-opacity duration-300 ease-out data-closed:opacity-0"
+          className="fixed inset-0 transition-opacity duration-300 ease-out z-99999 bg-black/70 data-closed:opacity-0"
         />
-        <div className="fixed inset-0 z-99999 flex px-4 py-6 sm:px-6">
-          <div className="mx-auto flex h-full max-w-6xl items-center">
+        <div className="fixed inset-0 flex px-4 py-6 z-99999 sm:px-6">
+          <div className="flex items-center h-full max-w-6xl mx-auto">
             <DialogPanel
               transition
-              className="aspect-video max-h-full w-full overflow-hidden rounded-2xl bg-black shadow-2xl duration-300 ease-out data-closed:scale-95 data-closed:opacity-0"
+              className="w-full max-h-full overflow-hidden duration-300 ease-out bg-black shadow-2xl aspect-video rounded-2xl data-closed:scale-95 data-closed:opacity-0"
             >
               <video
                 ref={videoRef}

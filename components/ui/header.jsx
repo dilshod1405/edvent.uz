@@ -61,7 +61,7 @@ export default function Header() {
   return (
     <header className="z-30 w-full mt-2 md:mt-5">
       <div className="max-w-6xl px-4 mx-auto sm:px-6">
-        <div className="relative flex items-center justify-between gap-3 px-3 h-14 rounded-2xl bg-gray-900/90">
+        <div className="relative flex items-center justify-between gap-4 px-3 h-14 rounded-2xl bg-gray-900/90">
           <div className="flex items-center flex-1">
             <Logo />
           </div>
