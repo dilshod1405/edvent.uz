@@ -36,7 +36,7 @@ const SignInForm = () => {
       if (error.response.status === 401) {
         setError("Email yoki parol xato!");
       } else {
-        setError("Xatolik yuz berdi!");
+        setError("Email yoki parol xato!");
       }
       setIsLoading(false);
     }

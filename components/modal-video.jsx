@@ -41,7 +41,7 @@ export default function ModalVideo({
           setModalOpen(true);
         }}
         aria-label="Watch the video"
-        data-aos="zoom-in"
+        data-aos="fade"
         data-aos-delay={200}
       >
         <figure className="relative overflow-hidden rounded-2xl before:absolute before:inset-0 before:-z-10 before:bg-linear-to-br before:from-gray-900 before:via-indigo-500/20 before:to-gray-900">

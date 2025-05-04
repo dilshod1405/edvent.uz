@@ -25,7 +25,7 @@ const EmailVerification = () => {
           setError("Email verification failed.");
         }
       } catch (err) {
-        setError("Network error occurred.");
+        setError("Xatolik yuz berdi!");
       } finally {
         setLoading(false);
       }
