@@ -169,7 +169,7 @@ export default function Footer() {
                   className="transition text-indigo-200/65 hover:text-indigo-500"
                   href="#0"
                 >
-                  Podkastlar
+                  Imtihonlar
                 </a>
               </li>
             </ul>
@@ -194,7 +194,7 @@ export default function Footer() {
                 <li>
                   <a
                     className="flex items-center justify-center text-indigo-500 transition hover:text-indigo-400"
-                    href="#0"
+                    href="https://www.youtube.com/@Edvent_uz"
                     aria-label="Youtube"
                   >
                     <svg
@@ -209,7 +209,7 @@ export default function Footer() {
                 <li>
                   <a
                     className="flex items-center justify-center text-indigo-500 transition hover:text-indigo-400"
-                    href="#0"
+                    href="https://t.me/edvent_uz"
                     aria-label="Telegram"
                   >
                     <svg
