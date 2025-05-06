@@ -14,11 +14,11 @@ export default function SignUpForm() {
   const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState(""); // New state for email error
+  const [emailError, setEmailError] = useState("");
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Function to check email availability
+  
   const checkEmailAvailability = async (email) => {
     try {
       const response = await axios.post(
@@ -27,10 +27,10 @@ export default function SignUpForm() {
         {headers: { "Content-Type": "application/json", 'X-CSRFToken': 'csrftoken'}
       }
       );
-      setEmailError(""); // Clear email error if available
+      setEmailError("");
     } catch (error) {
       if (error.response?.data?.detail) {
-        setEmailError(error.response.data.detail); // Set error if email exists
+        setEmailError(error.response.data.detail);
       }
     }
   };
@@ -43,10 +43,10 @@ export default function SignUpForm() {
         {headers: { "Content-Type": "application/json", 'X-CSRFToken': 'csrftoken'}
       }
       );
-      setUsernameError(""); // Clear username error if available
+      setUsernameError("");
     } catch (error) {
       if (error.response?.data?.detail) {
-        setUsernameError(error.response.data.detail); // Set error if username exists
+        setUsernameError(error.response.data.detail);
       }
     }
   }
@@ -54,17 +54,17 @@ export default function SignUpForm() {
   // Handle input changes
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    setEmailError(""); // Reset error message
+    setEmailError("");
     if (e.target.value) {
-      checkEmailAvailability(e.target.value); // Check email availability on change
+      checkEmailAvailability(e.target.value);
     }
   };
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
-    setUsernameError(""); // Reset error message
+    setUsernameError("");
     if (e.target.value) {
-      checkUsernameAvailability(e.target.value); // Check username availability on change
+      checkUsernameAvailability(e.target.value);
     }
   };
 
@@ -85,6 +85,11 @@ export default function SignUpForm() {
 
       if (emailError) {
         setError("Email allaqachon ro'yxatdan o'tgan.");
+        setLoading(false);
+        return;
+      }
+      if (usernameError) {
+        setError("Ushbu username allaqachon ro'yxatdan o'tgan.");
         setLoading(false);
         return;
       }
@@ -118,16 +123,16 @@ export default function SignUpForm() {
 
         setTimeout(() => {
           router.push(`/verify-email/${token}`);
-        }, 3000);
+        }, 2000);
       } else {
-        setError("Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+        setError("Xatolik yuz berdi. Iltimos, ma'lumotlarni tekshirib qayta urinib ko'ring.");
       }
     } catch (error) {
       console.error("Error during registration: ", error);
       if (error.response) {
         setError(
           error.response?.data?.detail ||
-          "Xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+          "Xatolik yuz berdi. Iltimos, ma'lumotlarni tekshirib qayta urinib ko'ring."
         );
       } else {
         setError("Tarmoqda uzilish yuz berdi. Iltimos, qayta urinib ko'ring.");
@@ -176,7 +181,7 @@ export default function SignUpForm() {
             placeholder="Elektron pochta"
             required
             value={email}
-            onChange={handleEmailChange} // Use handleEmailChange here
+            onChange={handleEmailChange}
           />
           {emailError && (
             <div className="mt-2 text-sm text-red-500">{emailError}</div>
@@ -228,7 +233,7 @@ export default function SignUpForm() {
       <div className="mt-6 space-y-5">
         <button
           className="w-full py-2 text-white bg-indigo-600 rounded cursor-pointer btn"
-          disabled={loading || emailError} // Disable button if email is not valid
+          disabled={loading || emailError}
         >
           {loading ? (
             <CircularProgress style={{ color: "white", width: "20px", height: "20px" }} />
@@ -236,7 +241,17 @@ export default function SignUpForm() {
             "Ro'yxatdan o'tish"
           )}
         </button>
-        {error && <div className="mt-4 text-center text-red-500">{error}</div>}
+        {emailError && (
+          <div className="mt-2 text-sm text-red-500">
+            {emailError}
+          </div>
+        )}
+        {usernameError && (
+          <div className="mt-2 text-sm text-red-500">
+            {usernameError}
+          </div>
+        )}
+        {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
         {successMessage && <div className="mt-4 text-center text-green-500">{successMessage}</div>}
       </div>
     </form>
