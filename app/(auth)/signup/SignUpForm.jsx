@@ -3,6 +3,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 export default function SignUpForm() {
   const [firstname, setFirstname] = useState("");
@@ -144,6 +146,18 @@ export default function SignUpForm() {
 
   return (
     <form className="mx-auto max-w-[400px]" onSubmit={handleSubmit}>
+      {successMessage && (
+        <Alert severity="info" className="mb-8" sx={{ backgroundColor: "#4f39f65e", color: "#fff", borderRadius: "8px", padding: "16px", fontSize: "14px" }}>
+        <AlertTitle>Pochtani tekshiring</AlertTitle>
+        {successMessage}
+        </Alert>
+      )}
+      {error && 
+        <Alert severity="error" className="mb-8" sx={{ backgroundColor: "#4f39f65e", color: "#fff", borderRadius: "8px", padding: "16px", fontSize: "14px" }}>
+        <AlertTitle>Xatolik</AlertTitle>
+        {error}
+        </Alert>
+      }
       <div className="space-y-5">
         <div>
           <label className="block mb-1 text-sm font-medium text-indigo-200/65">
@@ -252,7 +266,6 @@ export default function SignUpForm() {
           </div>
         )}
         {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
-        {successMessage && <div className="mt-4 text-center text-green-500">{successMessage}</div>}
       </div>
     </form>
   );
