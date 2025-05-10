@@ -1,11 +1,10 @@
 "use client";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import { debounce } from "@/utils";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 export default function SignUpForm() {
   const [firstname, setFirstname] = useState("");
@@ -21,17 +20,14 @@ export default function SignUpForm() {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState("");
 
+  
   const checkEmailAvailability = async (email) => {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/authentication/check-email/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/authentication/check-email/`, 
         { email },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": "csrftoken",
-          },
-        }
+        {headers: { "Content-Type": "application/json", 'X-CSRFToken': 'csrftoken'}
+      }
       );
       setEmailError("");
     } catch (error) {
@@ -44,14 +40,10 @@ export default function SignUpForm() {
   const checkUsernameAvailability = async (username) => {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/authentication/check-username/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/authentication/check-username/`, 
         { username },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": "csrftoken",
-          },
-        }
+        {headers: { "Content-Type": "application/json", 'X-CSRFToken': 'csrftoken'}
+      }
       );
       setUsernameError("");
     } catch (error) {
@@ -59,38 +51,22 @@ export default function SignUpForm() {
         setUsernameError(error.response.data.detail);
       }
     }
-  };
-
-  const debouncedCheckEmail = useCallback(
-    debounce((email) => {
-      checkEmailAvailability(email);
-    }, 500),
-    []
-  );
-
-  const debouncedCheckUsername = useCallback(
-    debounce((email) => {
-      checkUsernameAvailability(email);
-    }, 500),
-    []
-  );
+  }
 
   // Handle input changes
   const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
+    setEmail(e.target.value);
     setEmailError("");
-    if (value) {
-      debouncedCheckEmail(value);
+    if (e.target.value) {
+      checkEmailAvailability(e.target.value);
     }
   };
 
   const handleUsernameChange = (e) => {
-    const value = e.target.value;
-    setUsername(value);
+    setUsername(e.target.value);
     setUsernameError("");
-    if (value) {
-      debouncedCheckUsername(value);
+    if (e.target.value) {
+      checkUsernameAvailability(e.target.value);
     }
   };
 
@@ -100,17 +76,10 @@ export default function SignUpForm() {
     if (loading) return;
     setLoading(true);
     setError("");
-    setSuccessMessage("");
+    setSuccessMessage(""); 
 
     try {
-      if (
-        !firstname ||
-        !lastname ||
-        !email ||
-        !username ||
-        !password ||
-        !password2
-      ) {
+      if (!firstname || !lastname || !email || !username || !password || !password2) {
         setError("Barcha maydonlarni to'ldiring!");
         setLoading(false);
         return;
@@ -136,7 +105,7 @@ export default function SignUpForm() {
           email,
           username,
           password,
-          password2,
+          password2
         }
       );
 
@@ -144,9 +113,7 @@ export default function SignUpForm() {
       // console.log("Backend Response Data:", response.data);
 
       if (response.status === 201 || response.status === 200) {
-        setSuccessMessage(
-          "Ro'yxatdan o'tish muvaffaqiyatli yakunlandi! Iltimos, emailingizni tekshirib, tasdiqlash havolasini bosing."
-        );
+        setSuccessMessage("Ro'yxatdan o'tish muvaffaqiyatli yakunlandi! Iltimos, emailingizni tekshirib, tasdiqlash havolasini bosing.");
 
         // Clear form fields
         setFirstname("");
@@ -160,16 +127,14 @@ export default function SignUpForm() {
           router.push(`/verify-email/${token}`);
         }, 2000);
       } else {
-        setError(
-          "Xatolik yuz berdi. Iltimos, ma'lumotlarni tekshirib qayta urinib ko'ring."
-        );
+        setError("Xatolik yuz berdi. Iltimos, ma'lumotlarni tekshirib qayta urinib ko'ring.");
       }
     } catch (error) {
       console.error("Error during registration: ", error);
       if (error.response) {
         setError(
           error.response?.data?.detail ||
-            "Xatolik yuz berdi. Iltimos, ma'lumotlarni tekshirib qayta urinib ko'ring."
+          "Xatolik yuz berdi. Iltimos, ma'lumotlarni tekshirib qayta urinib ko'ring."
         );
       } else {
         setError("Tarmoqda uzilish yuz berdi. Iltimos, qayta urinib ko'ring.");
@@ -182,37 +147,17 @@ export default function SignUpForm() {
   return (
     <form className="mx-auto max-w-[400px]" onSubmit={handleSubmit}>
       {successMessage && (
-        <Alert
-          severity="info"
-          className="mb-8"
-          sx={{
-            backgroundColor: "#4f39f65e",
-            color: "#fff",
-            borderRadius: "8px",
-            padding: "16px",
-            fontSize: "14px",
-          }}
-        >
-          <AlertTitle>Pochtani tekshiring</AlertTitle>
-          {successMessage}
+        <Alert severity="info" className="mb-8" sx={{ backgroundColor: "#4f39f65e", color: "#fff", borderRadius: "8px", padding: "16px", fontSize: "14px" }}>
+        <AlertTitle>Pochtani tekshiring</AlertTitle>
+        {successMessage}
         </Alert>
       )}
-      {error && (
-        <Alert
-          severity="error"
-          className="mb-8"
-          sx={{
-            backgroundColor: "#4f39f65e",
-            color: "#fff",
-            borderRadius: "8px",
-            padding: "16px",
-            fontSize: "14px",
-          }}
-        >
-          <AlertTitle>Xatolik</AlertTitle>
-          {error}
+      {error && 
+        <Alert severity="error" className="mb-8" sx={{ backgroundColor: "#4f39f65e", color: "#fff", borderRadius: "8px", padding: "16px", fontSize: "14px" }}>
+        <AlertTitle>Xatolik</AlertTitle>
+        {error}
         </Alert>
-      )}
+      }
       <div className="space-y-5">
         <div>
           <label className="block mb-1 text-sm font-medium text-indigo-200/65">
@@ -305,18 +250,20 @@ export default function SignUpForm() {
           disabled={loading || emailError}
         >
           {loading ? (
-            <CircularProgress
-              style={{ color: "white", width: "20px", height: "20px" }}
-            />
+            <CircularProgress style={{ color: "white", width: "20px", height: "20px" }} />
           ) : (
             "Ro'yxatdan o'tish"
           )}
         </button>
         {emailError && (
-          <div className="mt-2 text-sm text-red-500">{emailError}</div>
+          <div className="mt-2 text-sm text-red-500">
+            {emailError}
+          </div>
         )}
         {usernameError && (
-          <div className="mt-2 text-sm text-red-500">{usernameError}</div>
+          <div className="mt-2 text-sm text-red-500">
+            {usernameError}
+          </div>
         )}
         {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
       </div>
