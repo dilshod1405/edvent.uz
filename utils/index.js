@@ -4,7 +4,7 @@ export function debounce(fn = () => {}, wait = 500) {
     return function (...args) {
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
-          console.log(args);
+        //   console.log(args);
           
         fn.apply(null, args);
       }, wait);
