@@ -1,1 +1,0 @@
-export {GET, POST} from "@/utils/authConfig/GoogleConfig";

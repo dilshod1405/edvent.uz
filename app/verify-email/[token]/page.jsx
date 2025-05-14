@@ -18,7 +18,7 @@ const EmailVerification = () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/authentication/verify-email/${token}/`);
         if (response.status === 200) {
-          const userEmail = response.data.email; // <-- get email from backend
+          const userEmail = response.data.email;
           // Redirect to signin page with email
           router.push(`/signin?email=${encodeURIComponent(userEmail)}`);
         } else {

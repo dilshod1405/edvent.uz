@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
 import Header from '@/components/ui/header';
-import { signIn, getSession } from 'next-auth/react';
+import { handleGoogleLogin } from "@/utils/authConfig/GoogleLogin";
 
 const SignInForm = () => {
   const { dispatch } = useAuth();
@@ -41,61 +41,8 @@ const SignInForm = () => {
       setIsLoading(false);
     }
   }
-
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signIn("google");
   
-      // Check if there was an error in the Google login process
-      if (result?.error) {
-        console.error("Google login failed:", result.error);
-        setError(result.error);
-        return;
-      }
   
-      // Fetch the session to get user data and the ID token
-      const session = await getSession();
-      console.log("Session:", session);
-      const idToken = session?.idToken;
-      
-  
-      if (!idToken) {
-        console.error("No ID token found in session!");
-        setError("Google identifikatsiyasi topilmadi.");
-        return;
-      }
-  
-      // Send the ID token to your backend to process login
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL_AUTH}/authentication/auth/google/`, {
-        token: idToken
-      });
-  
-      // Check if the backend responded successfully
-      if (response.status === 200) {
-        const { access, refresh, role, user } = response.data;
-  
-        // Store the tokens and user data in localStorage
-        localStorage.setItem("access", access);
-        localStorage.setItem("refresh", refresh);
-        localStorage.setItem("role", role); 
-        localStorage.setItem("id", user.id);
-        localStorage.setItem("email", user.email);
-        localStorage.setItem("username", user.username);
-        localStorage.setItem("first_name", user.first_name);
-        localStorage.setItem("last_name", user.last_name);
-        localStorage.setItem("photo", user.photo);
-  
-        console.log("Tokens saved, redirecting...");
-        router.push("/api/dashboard"); // Ensure proper redirection after successful login
-      } else {
-        console.log("Failed to log in, status:", response.status);
-        setError("Google orqali kirish muvaffaqiyatsiz bo'ldi.");
-      }
-    } catch (error) {
-      console.error("Google login error:", error);
-      setError("Google orqali kirishda xatolik yuz berdi.");
-    }
-  };
   
   return (
     <section>
@@ -129,12 +76,12 @@ const SignInForm = () => {
               <button type="submit" className="w-full text-white cursor-pointer btn bg-linear-to-t from-indigo-600 to-indigo-500">
                 {isLoading ? <CircularProgress style={{ color: "white", width: "20px", height: "20px" }} /> : "Kirish"}
               </button>
-              <div className="flex items-center gap-3 text-sm italic text-center text-gray-600">
+              {/* <div className="flex items-center gap-3 text-sm italic text-center text-gray-600">
                 <div className="flex-1 h-px bg-gray-400/25"></div> yoki <div className="flex-1 h-px bg-gray-400/25"></div>
               </div>
-              <button onClick={handleGoogleLogin} className="relative w-full text-gray-300 bg-gray-800 cursor-pointer c btn">
+              <button onClick={() => handleGoogleLogin(router, setError)} className="relative w-full text-gray-300 bg-gray-800 cursor-pointer c btn">
                 <img src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" className="w-7" alt="Google" /> Google orqali kirish
-              </button>
+              </button> */}
             </div>
           </form>
 
