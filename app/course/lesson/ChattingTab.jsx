@@ -32,13 +32,6 @@ export default function ChattingTab({ lessonId }) {
     audioRef.current = new Audio('/sounds/message.mp3');
   }, []);
 
-  useEffect(() => {
-  console.log('[ChattingTab] MOUNT');
-  return () => {
-    console.log('[ChattingTab] UNMOUNT');
-  };
-}, []);
-
 
   useEffect(() => {
   if (!lessonId || !token) return;
