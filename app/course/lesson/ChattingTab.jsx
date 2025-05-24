@@ -49,7 +49,7 @@ export default function ChattingTab({ lessonId }) {
 }, [lessonId, token]);
 
 
-  useEffect(() => {
+useEffect(() => {
   if (!lessonId || !token || !userId) return;
 
   const socket = io(process.env.NEXT_PUBLIC_API_SOCKET_URL, {
@@ -57,21 +57,30 @@ export default function ChattingTab({ lessonId }) {
     transports: ['websocket'],
   });
 
+  console.log('SOCKET INIT:', socket); // qo‘shib ko‘ring
+
   socketRef.current = socket;
 
   socket.on('connect', () => {
-    console.log('Socket.io ulandi');
+    console.log('✅ Socket.io ulandi');
     setIsConnected(true);
   });
 
   socket.on('disconnect', () => {
-    console.log('Socket.io uzildi');
+    console.log('❌ Socket.io uzildi');
     setIsConnected(false);
   });
 
+  const handleNewMessage = (data) => {
+    console.log('🔔 Yangi xabar:', data);
+    if (Number(data.senderId) !== Number(userId)) {
+      audioRef.current?.play();
+    }
+    setMessages(prev => [...prev, data]);
+  };
+
   socket.on('new_message', handleNewMessage);
 
-  // Cleanup
   return () => {
     socket.off('connect');
     socket.off('disconnect');
