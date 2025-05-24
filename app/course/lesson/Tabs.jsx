@@ -10,7 +10,7 @@ export default function Tabs({ activeTab, setActiveTab, lesson }) {
         {TABS.map(tab => (
           <button
             key={tab}
-            className={`pb-2 font-semibold ${
+            className={`pb-2 font-semibold cursor-pointer ${
               activeTab === tab ? 'border-b-4 border-[#4F39F6] text-white' : 'text-white/70'
             }`}
             onClick={() => setActiveTab(tab)}

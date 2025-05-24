@@ -1,10 +1,11 @@
 'use client';
-import { use, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import VideoPlayer from './VideoPlayer';
 import LessonsList from './LessonsList';
 import Tabs from './Tabs';
+import ChattingTab from './ChattingTab';  // ChattingTab import qilindi
 import { useParams } from 'next/navigation';
 
 export default function LessonPage() {
@@ -14,29 +15,14 @@ export default function LessonPage() {
   const [activeTab, setActiveTab] = useState('Q&A');
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   if (!id) return;
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await axios.get(`/api/lessons/${id}`);
-  //       setLesson(res.data);
-  //       const moduleRes = await axios.get(`/api/modules/${res.data.moduleId}/lessons`);
-  //       setModuleLessons(moduleRes.data);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [id]);
-
   useEffect(() => {
     if (!id) return;
+    // Hozircha mock ma'lumotlar bilan ishlaymiz
     setModuleLessons([
       { id: '1', title: '1-dars' },
       { id: '2', title: 'Lesson 2' },
       { id: '3', title: 'Lesson 3' },
     ]);
-    // For now, use hardcoded mock data
     setLesson({
       id,
       title: 'Revit Arxitektura kursiga kirish',
@@ -49,8 +35,6 @@ export default function LessonPage() {
         { name: 'Cheat Sheet PDF', url: 'https://example.com/cheatsheet.pdf' }
       ]
     });
-
-    
     setLoading(false);
   }, [id]);
 
@@ -63,8 +47,13 @@ export default function LessonPage() {
         <div className="lg:col-span-2">
           <VideoPlayer title={lesson.title} videoUrl={lesson.videoUrl} />
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} lesson={lesson} />
+
+          <div className="mt-6" style={{ display: activeTab === 'Tavsif' ? 'block' : 'none' }}>
+            <ChattingTab lessonId={lesson.id} />
+          </div>
         </div>
-        <LessonsList currentLessonId={lesson.id} moduleLessons={moduleLessons} moduleName="1-Modul"/>
+
+        <LessonsList currentLessonId={lesson.id} moduleLessons={moduleLessons} moduleName="1-Modul" />
       </div>
     </div>
   );

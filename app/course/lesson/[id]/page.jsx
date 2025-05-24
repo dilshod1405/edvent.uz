@@ -1,6 +1,7 @@
 import Header from '@/components/ui/header'
 import React from 'react'
 import LessonPage from '../LessonPage'
+import Footer from '@/components/ui/footer'
 
 
 const page = () => {
@@ -10,6 +11,7 @@ const page = () => {
       <div className='container py-12 mx-auto'>
         <LessonPage />
       </div>
+      <Footer />
     </div>
   )
 }
