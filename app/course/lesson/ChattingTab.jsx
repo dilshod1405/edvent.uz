@@ -41,7 +41,6 @@ export default function ChattingTab({ lessonId }) {
     headers: { Authorization: `Bearer ${token}` },
   })
     .then(res => {
-      console.log('Oldingi xabarlar:', res.data);
       setMessages(res.data);
     })
     .catch(err => {
@@ -54,10 +53,7 @@ export default function ChattingTab({ lessonId }) {
   if (!lessonId || !token || !userId) return;
 
   const socket = io(process.env.NEXT_PUBLIC_API_SOCKET_URL, {
-    auth: {
-      token,
-      lessonId,
-    },
+    auth: { token, lessonId },
     transports: ['websocket'],
   });
 
@@ -73,20 +69,17 @@ export default function ChattingTab({ lessonId }) {
     setIsConnected(false);
   });
 
-  const handleNewMessage = (data) => {
-    if (Number(data.senderId) !== Number(userId)) {
-      audioRef.current?.play();
-    }
-    setMessages(prev => [...prev, data]);
-  };
-
   socket.on('new_message', handleNewMessage);
 
+  // Cleanup
   return () => {
-    socket.off('new_message', handleNewMessage); 
+    socket.off('connect');
+    socket.off('disconnect');
+    socket.off('new_message', handleNewMessage);
     socket.disconnect();
   };
 }, [lessonId, token, userId]);
+
 
 
   useEffect(() => {
