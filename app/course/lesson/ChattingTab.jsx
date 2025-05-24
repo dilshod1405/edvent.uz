@@ -66,10 +66,11 @@ useEffect(() => {
     setIsConnected(true);
   });
 
-  socket.on('disconnect', () => {
-    console.log('❌ Socket.io uzildi');
-    setIsConnected(false);
-  });
+  socket.on('connect_error', (err) => {
+  console.error('❗ connect_error:', err.message);
+  console.error('🔍 Full error:', err);
+});
+
 
   const handleNewMessage = (data) => {
     console.log('🔔 Yangi xabar:', data);
