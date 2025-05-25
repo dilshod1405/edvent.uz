@@ -17,41 +17,52 @@ export default function LessonPage() {
   const [otpData, setOtpData] = useState(null);
   const [otpLoading, setOtpLoading] = useState(false);
 
+  // Backenddan lesson va moduleLessons olish
   useEffect(() => {
     if (!id) return;
 
-    // Mock lesson + module lessons — sen backenddan olib kelishing mumkin
-    setModuleLessons([
-      { id: '1', title: '1-dars' },
-      { id: '2', title: 'Lesson 2' },
-      { id: '3', title: 'Lesson 3' },
-    ]);
-    setLesson({
-      id,
-      title: 'Revit Arxitektura kursiga kirish',
-      moduleId: '1',
-      qa: 'Ushbu dars kursga kirish darsi.',
-      homework: 'Solve 5 practice problems.',
-      resources: [
-        { name: 'PDF Notes', url: '/docs/notes.pdf' },
-        { name: 'Cheat Sheet PDF', url: 'https://example.com/cheatsheet.pdf' }
-      ]
+    setLoading(true);
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}/support/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      }
+    })
+    .then(res => {
+      const data = res.data;
+      setLesson({
+        id: data.id,
+        title: data.title,
+        moduleId: data.module_id,
+        qa: data.qa,
+        homework: data.homework,
+        resources: data.resources,
+        videoId: data.video_id,  // backenddan video_id kelishi kerak
+      });
+      setModuleLessons(data.module_lessons || []); // Agar backenddan modul darslari keladigan bo‘lsa
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error('Failed to fetch lesson:', err);
+      setLoading(false);
     });
-    setLoading(false);
   }, [id]);
 
-  // OTP so‘rov yuborish (lesson video oynasini ochishda)
+  // OTP olish (video oynasi uchun)
   useEffect(() => {
     if (!lesson) return;
 
     const fetchOtp = async () => {
       setOtpLoading(true);
       try {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/education/vdocipher/otp/${lesson.id}/`, {}, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,  // yoki access tokenni qayerdan olsa bo‘lsa
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/education/vdocipher/otp/${lesson.id}/`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
           }
-        });
+        );
         setOtpData(res.data);
       } catch (e) {
         console.error('Failed to fetch OTP:', e);
@@ -73,7 +84,13 @@ export default function LessonPage() {
           {otpLoading ? (
             <p>Video yuklanmoqda...</p>
           ) : (
-            otpData && <VideoPlayer title={lesson.title} otp={otpData.otp} playbackInfo={otpData.playbackInfo} />
+            otpData && (
+              <VideoPlayer
+                title={lesson.title}
+                otp={otpData.otp}
+                playbackInfo={otpData.playbackInfo}
+              />
+            )
           )}
 
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} lesson={lesson} />
