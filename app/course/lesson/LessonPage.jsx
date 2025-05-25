@@ -7,6 +7,7 @@ import LessonsList from './LessonsList';
 import Tabs from './Tabs';
 import ChattingTab from './ChattingTab';
 import { useParams } from 'next/navigation';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function LessonPage() {
   const { id } = useParams();
@@ -74,8 +75,8 @@ export default function LessonPage() {
     fetchOtp();
   }, [lesson]);
 
-  if (loading) return <div className="mt-20 text-center text-white">Loading...</div>;
-  if (!lesson) return <div className="mt-20 text-center text-white">Lesson not found.</div>;
+  if (loading) return <div className="mt-20 text-center text-white"><CircularProgress /></div>;
+  if (!lesson) return <div className="mt-20 text-center text-white">Video dars topilmadi !</div>;
 
   return (
     <div className="min-h-screen bg-[#030712] text-white px-4 py-8 lg:px-12">
