@@ -140,7 +140,7 @@ useEffect(() => {
         <button
           onClick={handleSend}
           disabled={!isConnected}
-          className={`px-4 rounded-r-md flex items-center text-white ${
+          className={`px-4 rounded-r-md flex items-center hover:cursor-pointer text-white ${
             isConnected ? 'bg-[#4F39F6] hover:bg-[#3a2fd9]' : 'bg-gray-600 cursor-not-allowed'
           }`}
         >
