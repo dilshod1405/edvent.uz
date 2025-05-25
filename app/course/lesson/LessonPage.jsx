@@ -5,7 +5,7 @@ import axios from 'axios';
 import VideoPlayer from './VideoPlayer';
 import LessonsList from './LessonsList';
 import Tabs from './Tabs';
-import ChattingTab from './ChattingTab';  // ChattingTab import qilindi
+import ChattingTab from './ChattingTab';
 import { useParams } from 'next/navigation';
 
 export default function LessonPage() {
@@ -14,10 +14,13 @@ export default function LessonPage() {
   const [moduleLessons, setModuleLessons] = useState([]);
   const [activeTab, setActiveTab] = useState('Q&A');
   const [loading, setLoading] = useState(true);
+  const [otpData, setOtpData] = useState(null);
+  const [otpLoading, setOtpLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
-    // Hozircha mock ma'lumotlar bilan ishlaymiz
+
+    // Mock lesson + module lessons — sen backenddan olib kelishing mumkin
     setModuleLessons([
       { id: '1', title: '1-dars' },
       { id: '2', title: 'Lesson 2' },
@@ -26,7 +29,6 @@ export default function LessonPage() {
     setLesson({
       id,
       title: 'Revit Arxitektura kursiga kirish',
-      videoUrl: 'https://player.vdocipher.com/v2/?otp=20160313versASE323an1wcJ6hfM2bxAtkdZsKwSvHSbHko7ip3riuu9iLgdgnCf&playbackInfo=eyJ2aWRlb0lkIjoiNmNhZGFlNTQ0ZGQ1NDU5MmFlNTE4NDRjMzMzYzlmZDEifQ==',
       moduleId: '1',
       qa: 'Ushbu dars kursga kirish darsi.',
       homework: 'Solve 5 practice problems.',
@@ -38,6 +40,29 @@ export default function LessonPage() {
     setLoading(false);
   }, [id]);
 
+  // OTP so‘rov yuborish (lesson video oynasini ochishda)
+  useEffect(() => {
+    if (!lesson) return;
+
+    const fetchOtp = async () => {
+      setOtpLoading(true);
+      try {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/education/vdocipher/otp/${lesson.id}/`, {}, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,  // yoki access tokenni qayerdan olsa bo‘lsa
+          }
+        });
+        setOtpData(res.data);
+      } catch (e) {
+        console.error('Failed to fetch OTP:', e);
+      } finally {
+        setOtpLoading(false);
+      }
+    };
+
+    fetchOtp();
+  }, [lesson]);
+
   if (loading) return <div className="mt-20 text-center text-white">Loading...</div>;
   if (!lesson) return <div className="mt-20 text-center text-white">Lesson not found.</div>;
 
@@ -45,7 +70,12 @@ export default function LessonPage() {
     <div className="min-h-screen bg-[#030712] text-white px-4 py-8 lg:px-12">
       <div className="grid grid-cols-1 gap-8 mx-auto max-w-7xl lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <VideoPlayer title={lesson.title} videoUrl={lesson.videoUrl} />
+          {otpLoading ? (
+            <p>Video yuklanmoqda...</p>
+          ) : (
+            otpData && <VideoPlayer title={lesson.title} otp={otpData.otp} playbackInfo={otpData.playbackInfo} />
+          )}
+
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} lesson={lesson} />
 
           <div className="mt-6" style={{ display: activeTab === 'Tavsif' ? 'block' : 'none' }}>
