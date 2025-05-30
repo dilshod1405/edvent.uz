@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
 import Header from '@/components/ui/header';
 import { handleGoogleLogin } from "@/utils/authConfig/GoogleLogin";
+import Footer from '@/components/ui/footer';
 
 const SignInForm = () => {
   const { dispatch } = useAuth();
@@ -91,6 +92,7 @@ const SignInForm = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </section>
   );
 }
