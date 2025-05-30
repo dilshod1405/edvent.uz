@@ -8,7 +8,6 @@ import Tabs from './Tabs';
 import ChattingTab from './ChattingTab';
 import { useParams } from 'next/navigation';
 import CircularProgress from '@mui/material/CircularProgress';
-import { duration } from '@mui/material';
 
 export default function LessonPage() {
   const { id } = useParams();
@@ -22,11 +21,15 @@ export default function LessonPage() {
   // Backenddan lesson va moduleLessons olish
   useEffect(() => {
     if (!id) return;
-
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/signin';
+    }
     setLoading(true);
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/lessons/${id}/`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       }
     })
     .then(res => {
