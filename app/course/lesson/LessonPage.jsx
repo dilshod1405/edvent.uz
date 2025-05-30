@@ -79,7 +79,7 @@ useEffect(() => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access')}`,
           }
         }
       );
@@ -118,7 +118,7 @@ useEffect(() => {
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} lesson={lesson} />
 
           <div className="mt-6" style={{ display: activeTab === 'Tavsif' ? 'block' : 'none' }}>
-            <ChattingTab lessonId={lesson.id} resources={lesson.resources} homeworks={lesson.homeworks}/>
+            <ChattingTab lessonId={lesson.id}/>
           </div>
         </div>
 
