@@ -21,14 +21,32 @@ export default function Tabs({ activeTab, setActiveTab, lesson }) {
       </div>
 
       <div className="mt-4">
-        {activeTab === 'Tavsif' && <div>{lesson.qa || 'Ushbu dars uchun tavsif mavjud emas.'}</div>}
-        {activeTab === 'Vazifalar' && <div>{lesson.homework || 'Vazifa mavjud emas.'}</div>}
+        {/* {activeTab === 'Tavsif' && <div>{lesson.qa || 'Ushbu dars uchun tavsif mavjud emas.'}</div>} */}
+        {activeTab === 'Vazifalar' && (
+          <ul className="space-y-2 list-disc list-inside">
+            {(lesson.homeworks || []).length > 0 ? (
+              lesson.homeworks.map((hw, i) => (
+                <li key={i}>
+                  {hw.description}
+                  {hw.file && (
+                    <a href={hw.file} target="_blank" rel="noreferrer" className="ml-2 text-blue-300 underline">
+                      Yuklab olish
+                    </a>
+                  )}
+                </li>
+              ))
+            ) : (
+              <p>Vazifa mavjud emas.</p>
+            )}
+          </ul>
+        )}
+
         {activeTab === "Qo'llanmalar" && (
           <ul className="space-y-2 text-white list-disc list-inside">
             {(lesson.resources || []).map((file, i) => (
               <li key={i}>
-                <Link href={file.url} target="_blank" rel="noreferrer" className="text-blue-300 underline">
-                  {file.name}
+                <Link href={file.file} target="_blank" rel="noreferrer" className="text-blue-300 underline">
+                  {file.title}
                 </Link>
               </li>
             ))}

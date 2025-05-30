@@ -8,12 +8,13 @@ import Tabs from './Tabs';
 import ChattingTab from './ChattingTab';
 import { useParams } from 'next/navigation';
 import CircularProgress from '@mui/material/CircularProgress';
+import { duration } from '@mui/material';
 
 export default function LessonPage() {
   const { id } = useParams();
   const [lesson, setLesson] = useState(null);
   const [moduleLessons, setModuleLessons] = useState([]);
-  const [activeTab, setActiveTab] = useState('Q&A');
+  const [activeTab, setActiveTab] = useState('Tavsif');
   const [loading, setLoading] = useState(true);
   const [otpData, setOtpData] = useState(null);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -34,9 +35,11 @@ export default function LessonPage() {
         id: data.id,
         title: data.title,
         moduleId: data.module_id,
-        qa: data.qa,
-        homework: data.homework,
+        homeworks: data.homeworks,
         resources: data.resources,
+        duration: data.duration,
+        moduleTitle: data.module_title,
+        course_title: data.course_title,
         videoId: data.video_id,  // backenddan video_id kelishi kerak
       });
       setModuleLessons(data.module_lessons || []); // Agar backenddan modul darslari keladigan bo‘lsa
@@ -99,11 +102,11 @@ useEffect(() => {
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} lesson={lesson} />
 
           <div className="mt-6" style={{ display: activeTab === 'Tavsif' ? 'block' : 'none' }}>
-            <ChattingTab lessonId={lesson.id} />
+            <ChattingTab lessonId={lesson.id} resources={lesson.resources} homeworks={lesson.homeworks}/>
           </div>
         </div>
 
-        <LessonsList currentLessonId={lesson.id} moduleLessons={moduleLessons} moduleName="1-Modul" />
+        <LessonsList key={lesson.id} moduleLessons={moduleLessons} currentLessonId={lesson.id} moduleName={lesson.moduleTitle} duration={lesson.duration}/>
       </div>
     </div>
   );
