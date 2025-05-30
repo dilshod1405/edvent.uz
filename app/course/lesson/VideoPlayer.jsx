@@ -2,36 +2,36 @@
 
 import { useEffect } from 'react';
 
-
 export default function VideoPlayer({ title, otp, playbackInfo }) {
   useEffect(() => {
-    // VdoCipher player script qo‘shamiz
     const script = document.createElement('script');
     script.src = "https://player.vdocipher.com/playerAssets/1.6.12/vdo.js";
     script.async = true;
-    document.body.appendChild(script);
 
+    // Player yuklanganda ishga tushirish
     script.onload = () => {
       if (window.VdoPlayer) {
-        // Oldingi player bo‘lsa o‘chirib tashlaymiz
-        window.VdoPlayer.destroy && window.VdoPlayer.destroy();
+        new window.VdoPlayer({
+          otp,
+          playbackInfo,
+          theme: '9ae7ff', // optional, default theme
+          container: '#vdoPlayer',
+          autoplay: true,
+        });
       }
-
-      window.VdoPlayer = new window.VdoPlayer({
-        otp,
-        playbackInfo,
-        theme: '9ae7ff',
-        container: document.getElementById('vdoPlayer'),
-        autoplay: true,
-      });
     };
 
+    document.body.appendChild(script);
+
+    // Tozalash: player va script
     return () => {
-      if (window.VdoPlayer) {
-        window.VdoPlayer.destroy && window.VdoPlayer.destroy();
-        window.VdoPlayer = null;
+      const container = document.getElementById('vdoPlayer');
+      if (container) container.innerHTML = '';
+
+      const existingScript = document.querySelector('script[src*="vdo.js"]');
+      if (existingScript) {
+        document.body.removeChild(existingScript);
       }
-      document.body.removeChild(script);
     };
   }, [otp, playbackInfo]);
 

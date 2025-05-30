@@ -5,8 +5,7 @@ export const metadata = {
   
 import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
-  import Link from "next/link";
-  
+
   export default function ResetPassword() {
     return (
       <section>
