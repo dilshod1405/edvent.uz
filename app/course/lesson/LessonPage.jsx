@@ -49,31 +49,33 @@ export default function LessonPage() {
   }, [id]);
 
   // OTP olish (video oynasi uchun)
-  useEffect(() => {
-    if (!lesson) return;
+useEffect(() => {
+  if (!lesson || !lesson.videoId) return;
 
-    const fetchOtp = async () => {
-      setOtpLoading(true);
-      try {
-        const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/education/vdocipher/otp/${lesson.id}/`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            }
+  const fetchOtp = async () => {
+    setOtpLoading(true);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/education/vdocipher/otp/${lesson.videoId}/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           }
-        );
-        setOtpData(res.data);
-      } catch (e) {
-        console.error('Failed to fetch OTP:', e);
-      } finally {
-        setOtpLoading(false);
-      }
-    };
+        }
+      );
+      setOtpData(res.data);
+    } catch (e) {
+      console.error('Failed to fetch OTP:', e);
+      setOtpData(null);
+    } finally {
+      setOtpLoading(false);
+    }
+  };
 
-    fetchOtp();
-  }, [lesson]);
+  fetchOtp();
+}, [lesson]);
+
 
   if (loading) return <div className="mt-20 text-center text-white"><CircularProgress /></div>;
   if (!lesson) return <div className="mt-20 text-center text-white">Video dars topilmadi !</div>;
