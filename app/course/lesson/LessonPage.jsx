@@ -20,19 +20,24 @@ export default function LessonPage() {
 
   // Backenddan lesson va moduleLessons olish
   useEffect(() => {
-    if (!id) return;
-    
+  if (!id) return;
+
+  const fetchLesson = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       window.location.href = '/signin';
+      return;
     }
+
     setLoading(true);
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/lessons/${id}/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
-    .then(res => {
+
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/lessons/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
       const data = res.data;
       setLesson({
         id: data.id,
@@ -43,16 +48,24 @@ export default function LessonPage() {
         duration: data.duration,
         moduleTitle: data.module_title,
         course_title: data.course_title,
-        videoId: data.video_id,  // backenddan video_id kelishi kerak
+        videoId: data.video_id,
       });
-      setModuleLessons(data.module_lessons || []); // Agar backenddan modul darslari keladigan bo‘lsa
-      setLoading(false);
-    })
-    .catch(err => {
+      setModuleLessons(data.module_lessons || []);
+    } catch (err) {
       console.error('Failed to fetch lesson:', err);
+
+      // Agar backend 401 qaytarsa
+      if (err.response?.status === 401) {
+        window.location.href = '/signin';
+      }
+    } finally {
       setLoading(false);
-    });
-  }, [id]);
+    }
+  };
+
+  fetchLesson();
+}, [id]);
+
 
   // OTP olish (video oynasi uchun)
 useEffect(() => {
