@@ -23,7 +23,7 @@ export default function LessonPage() {
     if (!id) return;
 
     setLoading(true);
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/lessons/${id}/support/`, {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/lessons/${id}/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       }
