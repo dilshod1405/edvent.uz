@@ -97,7 +97,7 @@ useEffect(() => {
 }, [lesson]);
 
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen bg-[#030712] text-white">
+  if (loading) return <div className="flex flex-col items-center justify-center min-h-screen">
     <Skeleton width={640} height={20} />
     <Skeleton
         sx={{ bgcolor: '#030713' }}
@@ -113,7 +113,12 @@ useEffect(() => {
       <div className="grid grid-cols-1 gap-8 mx-auto max-w-7xl lg:grid-cols-3">
         <div className="lg:col-span-2">
           {otpLoading ? (
-            <p>Video yuklanmoqda...</p>
+            <Skeleton
+              sx={{ bgcolor: '#030713' }}
+              variant="rectangular"
+              width={640}
+              height={360}
+            />
           ) : (
             otpData && (
               <VideoPlayer
