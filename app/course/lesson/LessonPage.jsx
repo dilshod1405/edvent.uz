@@ -100,7 +100,7 @@ useEffect(() => {
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-[#030712] text-white">
     <Skeleton width={640} height={20} />
     <Skeleton
-        sx={{ bgcolor: 'grey.900' }}
+        sx={{ bgcolor: '#030713' }}
         variant="rectangular"
         width={640}
         height={360}
