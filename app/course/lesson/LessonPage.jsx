@@ -97,13 +97,8 @@ useEffect(() => {
 }, [lesson]);
 
 
-  if (loading) return <div className="p-6 mx-auto in-h-screen p">
-    <Skeleton
-        sx={{ bgcolor: '#2B3856' }}
-        variant="rectangular"
-        width={750}
-        height={380}
-      />
+  if (loading) return <div className="mt-20 text-2xl font-semibold text-center text-white">
+    <CircularProgress className="mx-auto" color="inherit" />
   </div>;
   if (!lesson) return <div className="mt-20 text-2xl font-semibold text-center text-white">Video dars topilmadi !</div>;
 
