@@ -42,6 +42,7 @@ export default function LessonPage() {
       setLesson({
         id: data.id,
         title: data.title,
+        description: data.description,
         moduleId: data.module_id,
         homeworks: data.homeworks,
         resources: data.resources,
@@ -111,6 +112,7 @@ useEffect(() => {
                 title={lesson.title}
                 otp={otpData.otp}
                 playbackInfo={otpData.playbackInfo}
+                description={lesson.description}
               />
             )
           )}

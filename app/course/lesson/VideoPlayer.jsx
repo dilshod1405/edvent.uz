@@ -8,7 +8,7 @@ export default function VideoPlayer({ title, otp, playbackInfo }) {
       <h1 className="mb-4 text-3xl font-bold">{title}</h1>
       <iframe
         src={iframeSrc}
-        style={{ border: 0, width: '100%', height: '405px' }}
+        style={{ border: 0, width: '100%', height: '390px' }}
         allow="encrypted-media"
         allowFullScreen
         title="VdoCipher Player"
