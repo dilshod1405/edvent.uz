@@ -19,9 +19,9 @@ export default function Tabs({ activeTab, setActiveTab, lesson }) {
           </button>
         ))}
       </div>
-
+      
       <div className="mt-4">
-        {/* {activeTab === 'Tavsif' && <div>{lesson.qa || 'Ushbu dars uchun tavsif mavjud emas.'}</div>} */}
+        {activeTab === 'Tavsif' && <div>{lesson.description || 'Ushbu dars uchun tavsif mavjud emas.'}</div>}
         {activeTab === 'Vazifalar' && (
           <ul className="space-y-2 list-disc list-inside">
             {(lesson.homeworks || []).length > 0 ? (
