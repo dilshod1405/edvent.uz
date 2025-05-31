@@ -47,7 +47,7 @@ export default function Tabs({ activeTab, setActiveTab, lesson }) {
             {(lesson.resources || []).map((file, i) => (
               <li key={i}>
                 <Link href={file.file} target="_blank" rel="noreferrer" className="text-blue-300 underline">
-                  {file.title}
+                  <DownloadIcon /> {file.title}
                 </Link>
               </li>
             ))}

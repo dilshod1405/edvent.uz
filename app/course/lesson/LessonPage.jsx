@@ -121,9 +121,8 @@ useEffect(() => {
 
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} lesson={lesson} />
 
-          <div className="mt-6" style={{ display: activeTab === 'Tavsif' ? 'block' : 'none' }}>
-            <ChattingTab lessonId={lesson.id}/>
-          </div>
+          <div className="mt-6" style={{ display: activeTab === 'Tavsif' ? 'block' : 'none' }} />
+
         </div>
 
         <LessonsList key={lesson.id} moduleLessons={moduleLessons} title={lesson.title} currentLessonId={lesson.id} moduleName={lesson.moduleTitle} duration={lesson.duration}/>
