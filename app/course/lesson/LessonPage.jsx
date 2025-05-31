@@ -97,13 +97,13 @@ useEffect(() => {
 }, [lesson]);
 
 
-  if (loading) return <div>
-    <Skeleton />
+  if (loading) return <div className="flex items-center justify-center min-h-screen bg-[#030712] text-white">
+    <Skeleton width={640}/>
     <Skeleton
         sx={{ bgcolor: 'grey.900' }}
         variant="rectangular"
-        width={210}
-        height={118}
+        width={640}
+        height={360}
       />
   </div>;
   if (!lesson) return <div className="mt-20 text-2xl font-semibold text-center text-white">Video dars topilmadi !</div>;
@@ -113,7 +113,12 @@ useEffect(() => {
       <div className="grid grid-cols-1 gap-8 mx-auto max-w-7xl lg:grid-cols-3">
         <div className="lg:col-span-2">
           {otpLoading ? (
-            <p>Video yuklanmoqda...</p>
+            <Skeleton
+              sx={{ bgcolor: 'grey.900' }}
+              variant="rectangular"
+              width={640}
+              height={360}
+            />
           ) : (
             otpData && (
               <VideoPlayer
