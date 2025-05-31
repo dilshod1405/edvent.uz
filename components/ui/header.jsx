@@ -10,9 +10,16 @@ export default function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [photo, setPhoto] = useState(() => localStorage.getItem("photo") || "");
+  const [photo, setPhoto] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+  const storedPhoto = localStorage.getItem("photo");
+  if (storedPhoto) {
+    setPhoto(storedPhoto);
+  }
+}, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
