@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ChattingTab from './ChattingTab';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const TABS = ['Tavsif', 'Vazifalar', "Qo'llanmalar", 'Savol-javob'];
 
@@ -30,7 +31,7 @@ export default function Tabs({ activeTab, setActiveTab, lesson }) {
                   {hw.description}
                   {hw.file && (
                     <a href={hw.file} target="_blank" rel="noreferrer" className="ml-2 text-blue-300 underline">
-                      Yuklab olish
+                      <DownloadIcon /> Yuklab olish
                     </a>
                   )}
                 </li>
