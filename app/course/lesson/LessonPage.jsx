@@ -5,9 +5,9 @@ import axios from 'axios';
 import VideoPlayer from './VideoPlayer';
 import LessonsList from './LessonsList';
 import Tabs from './Tabs';
-import ChattingTab from './ChattingTab';
 import { useParams } from 'next/navigation';
 import CircularProgress from '@mui/material/CircularProgress';
+import Skeleton from '@mui/material/Skeleton';
 
 export default function LessonPage() {
   const { id } = useParams();
@@ -97,8 +97,16 @@ useEffect(() => {
 }, [lesson]);
 
 
-  if (loading) return <div className="mt-20 text-center text-white"><CircularProgress /></div>;
-  if (!lesson) return <div className="mt-20 text-center text-white">Video dars topilmadi !</div>;
+  if (loading) return <div>
+    <Skeleton />
+    <Skeleton
+        sx={{ bgcolor: 'grey.900' }}
+        variant="rectangular"
+        width={210}
+        height={118}
+      />
+  </div>;
+  if (!lesson) return <div className="mt-20 text-2xl font-semibold text-center text-white">Video dars topilmadi !</div>;
 
   return (
     <div className="min-h-screen bg-[#030712] text-white px-4 py-8 lg:px-12">
