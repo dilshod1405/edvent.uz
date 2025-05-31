@@ -97,12 +97,12 @@ useEffect(() => {
 }, [lesson]);
 
 
-  if (loading) return <div className="min-h-screen mx-auto">
+  if (loading) return <div className="p-6 mx-auto in-h-screen p">
     <Skeleton
         sx={{ bgcolor: '#2B3856' }}
         variant="rectangular"
-        width={1000}
-        height={405}
+        width={750}
+        height={380}
       />
   </div>;
   if (!lesson) return <div className="mt-20 text-2xl font-semibold text-center text-white">Video dars topilmadi !</div>;
@@ -115,8 +115,8 @@ useEffect(() => {
             <Skeleton
               sx={{ bgcolor: '#2B3856' }}
               variant="rectangular"
-              width={1000}
-              height={405}
+              width={750}
+              height={380}
             />
           ) : (
             otpData && (
