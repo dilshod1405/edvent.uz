@@ -15,13 +15,6 @@ export default function Header() {
   const router = useRouter();
 
   useEffect(() => {
-  const storedPhoto = localStorage.getItem("photo");
-  if (storedPhoto) {
-    setPhoto(storedPhoto);
-  }
-}, []);
-
-  useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("access");
       const id = localStorage.getItem("id");
@@ -36,17 +29,10 @@ export default function Header() {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/authentication/users/${id}/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        if (res.status !== 200) {
-          throw new Error("Failed to fetch user data");
-        }
-
-        const fetchedPhoto = res.data.photo || "";
-        setPhoto(fetchedPhoto);
-        localStorage.setItem("photo", fetchedPhoto);
-
+        const photoFromStorage = localStorage.getItem("photo");
         setFirstname(res.data.first_name);
         setLastname(res.data.last_name);
+        setPhoto(photoFromStorage || "");
         setIsAuthenticated(true);
       } catch (error) {
         console.error(error);
@@ -87,26 +73,20 @@ export default function Header() {
                     {firstname} {lastname}
                   </Link>
                 </li>
-                {photo && (
-                  <li>
-                    <Avatar
-                      alt={`${firstname} ${lastname}`}
-                      src={`${process.env.NEXT_PUBLIC_API_URL}${photo}`}
-                    />
-                  </li>
-                )}
+                <li>
+                  <Avatar 
+                    alt={``} 
+                    src={photo ? `${process.env.NEXT_PUBLIC_API_URL}${photo}` : photo} 
+                  />
+                </li>
               </>
             ) : (
               <>
                 <li>
-                  <Link href="/signin" className="py-1 text-gray-300 bg-gray-800 btn-sm">
-                    Kirish
-                  </Link>
+                  <Link href="/signin" className="py-1 text-gray-300 bg-gray-800 btn-sm">Kirish</Link>
                 </li>
                 <li>
-                  <Link href="/signup" className="py-1 text-white bg-indigo-600 btn-sm">
-                    Ro'yxatdan o'tish
-                  </Link>
+                  <Link href="/signup" className="py-1 text-white bg-indigo-600 btn-sm">Ro'yxatdan o'tish</Link>
                 </li>
               </>
             )}
