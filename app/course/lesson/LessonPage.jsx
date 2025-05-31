@@ -122,7 +122,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <LessonsList key={lesson.id} moduleLessons={moduleLessons} currentLessonId={lesson.id} moduleName={lesson.moduleTitle} duration={lesson.duration}/>
+        <LessonsList key={lesson.id} moduleLessons={moduleLessons} title={lesson.title} currentLessonId={lesson.id} moduleName={lesson.moduleTitle} duration={lesson.duration}/>
       </div>
     </div>
   );

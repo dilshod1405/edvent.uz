@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function LessonsList({ currentLessonId, moduleLessons, moduleName }) {
+export default function LessonsList({ currentLessonId, moduleLessons, moduleName, title }) {
   return (
     <div className="bg-[#17212b] p-4 rounded-md shadow-md">
       <h2 className="mb-4 text-xl font-semibold text-white">{moduleName}</h2>
