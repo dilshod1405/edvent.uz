@@ -100,7 +100,7 @@ useEffect(() => {
   if (loading) return <div className="flex flex-col items-center justify-center min-h-screen">
     <Skeleton width={640} height={20} />
     <Skeleton
-        sx={{ bgcolor: '#030713' }}
+        sx={{ bgcolor: '#2B3856' }}
         variant="rectangular"
         width={640}
         height={360}
@@ -114,7 +114,7 @@ useEffect(() => {
         <div className="lg:col-span-2">
           {otpLoading ? (
             <Skeleton
-              sx={{ bgcolor: '#030713' }}
+              sx={{ bgcolor: '#2B3856' }}
               variant="rectangular"
               width={640}
               height={360}
