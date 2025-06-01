@@ -31,7 +31,7 @@ const SignInForm = () => {
         localStorage.setItem("photo", photo);
         dispatch({ type: "LOGIN", payload: { token: access, user: res.data.user } });
         setIsLoading(false);
-        router.replace("/api/dashboard");
+        router.replace("/api/dashboard/kurslarim");
       }
     } catch (error) {
       if (error.response.status === 401) {
