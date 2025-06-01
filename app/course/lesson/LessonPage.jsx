@@ -116,7 +116,7 @@ useEffect(() => {
           ) : (
             otpData && (
               <VideoPlayer
-                key={lesson.id}
+                key={data.id}
                 className="mb-6"
                 title={lesson.title}
                 otp={otpData.otp}
