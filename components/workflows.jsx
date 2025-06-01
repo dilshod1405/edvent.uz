@@ -1,164 +1,149 @@
-import Image from "next/image";
-import WorflowImg01 from "@/public/images/workflow-01.png";
-import WorflowImg02 from "@/public/images/workflow-02.png";
-import WorflowImg03 from "@/public/images/workflow-03.png";
-import Spotlight from "@/components/spotlight";
-import Link from "next/link";
+"use client";
+
+import React, { useRef } from "react";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+function TiltCard({ href, title, description, image }) {
+  const cardRef = useRef(null);
+
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+
+  const rotateX = useSpring(
+    useTransform(mouseY, [0, 1], [15, -15]),
+    { damping: 25, stiffness: 150 }
+  );
+  const rotateY = useSpring(
+    useTransform(mouseX, [0, 1], [-15, 15]),
+    { damping: 25, stiffness: 150 }
+  );
+
+  const shadowX = useTransform(mouseX, [0, 1], [-30, 30]);
+  const shadowY = useTransform(mouseY, [0, 1], [-30, 30]);
+
+  const boxShadow = useTransform(
+    [shadowX, shadowY],
+    ([x, y]) =>
+      `${x}px ${y}px 40px rgba(115, 0, 253, 0.6), 0 0 60px rgba(115, 0, 253, 0.3)`
+  );
+
+  function handleMouseMove(e) {
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    mouseX.set(x);
+    mouseY.set(y);
+  }
+
+  function handleMouseLeave() {
+    mouseX.set(0.5);
+    mouseY.set(0.5);
+  }
+
+  // Intersection Observer hook
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.2,
+  });
+
+  return (
+    <motion.a
+      href={href}
+      ref={(node) => {
+        cardRef.current = node;
+        ref(node);
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative max-w-sm bg-gradient-to-tr from-[#4F39F6] to-[#14067a]/70 rounded-2xl shadow-xl overflow-hidden cursor-pointer"
+      style={{
+        rotateX,
+        rotateY,
+        transformPerspective: 800,
+        boxShadow,
+      }}
+      initial={{ opacity: 0, y: 40, scale: 0.9 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ type: "spring", stiffness: 200, damping: 30, duration: 0.6 }}
+      whileHover={{ scale: 1.07 }}
+    >
+      <div className="relative h-52 w-full overflow-hidden rounded-t-2xl">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover transition-transform duration-700 ease-in-out"
+        />
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 0.3 }}
+          transition={{ duration: 0.5 }}
+        />
+      </div>
+      <div className="p-6">
+        <motion.h3
+          className="text-white text-xl font-bold mb-2"
+          initial={{ y: 0, color: "#e0d7ff" }}
+          whileHover={{ y: -6, color: "#b13aff" }}
+          transition={{ duration: 0.4 }}
+        >
+          {title}
+        </motion.h3>
+        <motion.p
+          className="text-purple-200 text-sm leading-relaxed"
+          initial={{ y: 0, opacity: 1 }}
+          whileHover={{ y: -3, opacity: 0.85 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          {description}
+        </motion.p>
+      </div>
+    </motion.a>
+  );
+}
 
 export default function Workflows() {
+  const workflows = [
+    {
+      href: "/foundations",
+      title: "Maxsus Kurslar",
+      description:
+        "Fundamental bilimlarni o'rganishga mo'ljallangan o'quv kurslar.",
+      image:
+        "https://i.pinimg.com/736x/09/c0/81/09c081f3dddcb88244fdc57b2bbf62e0.jpg",
+    },
+    {
+      href: "/specialities",
+      title: "Mutaxassislik Kurslar",
+      description: "Turli xildagi zamonaviy mutaxassisliklar bo'yicha kurslar.",
+      image:
+        "https://i.pinimg.com/736x/5b/17/4b/5b174bb175968e241a534a1f78559fc9.jpg",
+    },
+    {
+      href: "/tariffs",
+      title: "Tarifli Kurslar",
+      description:
+        "Bir nechta mutaxassislik kurslarini qamrab olgan, arzonlashtirilgan paketli kurslar.",
+      image:
+        "https://i.pinimg.com/736x/fb/a5/00/fba500c6e99adee23edf4e5e7ad31722.jpg",
+    },
+  ];
+
   return (
-    <section>
-      <div className="max-w-6xl px-4 mx-auto sm:px-6">
-        <div className="pb-12 md:pb-20">
-          <div className="max-w-3xl pb-12 mx-auto text-center md:pb-20">
-            <div className="inline-flex items-center gap-3 pb-3 before:h-px before:w-8 before:bg-linear-to-r before:from-transparent before:to-indigo-200/50 after:h-px after:w-8 after:bg-linear-to-l after:from-transparent after:to-indigo-200/50">
-              <span className="inline-flex text-transparent bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text">
-                Ta'lim turlari
-              </span>
-            </div>
-            <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,var(--color-gray-200),var(--color-indigo-200),var(--color-gray-50),var(--color-indigo-300),var(--color-gray-200))] bg-[length:200%_auto] bg-clip-text pb-4 font-nacelle text-3xl font-semibold text-transparent md:text-4xl">
-              O'quv kurslarining strukturasi
-            </h2>
-            <p className="text-lg text-indigo-200/65">
-              Kurslar quyidagidacha turlarga bo'linadi. O'zingizga kerakli bo'lgan yo'nalishni tanlang, agar savollaringiz bo'lsa telegram botimiz orqali bizga aloqaga chiqing
-            </p>
-          </div>
-          <Spotlight className="grid items-start max-w-sm gap-6 mx-auto group lg:max-w-none lg:grid-cols-3">
-            <Link
-              data-aos="fade-up"
-              data-aos-delay={200}
-              className="group/card relative h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-500/80 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 hover:after:opacity-20 group-hover:before:opacity-100"
-              href="/foundations"
-            >
-              <div className="relative z-20 h-full overflow-hidden rounded-[inherit] bg-gray-950 after:absolute after:inset-0 after:bg-linear-to-br after:from-gray-900/50 after:via-gray-800/25 after:to-gray-900/50">
-                <div
-                  className="absolute flex items-center justify-center w-8 h-8 text-gray-200 transition-opacity border rounded-full opacity-0 right-6 top-6 border-gray-700/50 bg-gray-800/65 group-hover/card:opacity-100"
-                  aria-hidden="true"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={9}
-                    height={8}
-                    fill="none"
-                  >
-                    <path
-                      fill="#F4F4F5"
-                      d="m4.92 8-.787-.763 2.733-2.68H0V3.443h6.866L4.133.767 4.92 0 9 4 4.92 8Z"
-                    />
-                  </svg>
-                </div>
-                <Image
-                  className="inline-flex"
-                  src={WorflowImg01}
-                  width={350}
-                  height={288}
-                  alt="Workflow 01"
-                />
-                <div className="p-6">
-                  <div className="mb-3">
-                    <span className="btn-sm relative rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-gray-800/60">
-                      <span className="text-transparent bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text">
-                        Maxsus kurslar
-                      </span>
-                    </span>
-                  </div>
-                  <p className="text-indigo-200/65">
-                    Fundamental bilimlarni o'rgatishga mo'ljallangan o'quv kurslar. Batafsil ma'lumot.
-                  </p>
-                </div>
-              </div>
-            </Link>
-            <Link
-              data-aos="fade-up"
-              data-aos-delay={200}
-              className="group/card relative h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-500/80 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 hover:after:opacity-20 group-hover:before:opacity-100"
-              href="/specialities"
-            >
-              <div className="relative z-20 h-full overflow-hidden rounded-[inherit] bg-gray-950 after:absolute after:inset-0 after:bg-linear-to-br after:from-gray-900/50 after:via-gray-800/25 after:to-gray-900/50">
-                <div
-                  className="absolute flex items-center justify-center w-8 h-8 text-gray-200 transition-opacity border rounded-full opacity-0 right-6 top-6 border-gray-700/50 bg-gray-800/65 group-hover/card:opacity-100"
-                  aria-hidden="true"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={9}
-                    height={8}
-                    fill="none"
-                  >
-                    <path
-                      fill="#F4F4F5"
-                      d="m4.92 8-.787-.763 2.733-2.68H0V3.443h6.866L4.133.767 4.92 0 9 4 4.92 8Z"
-                    />
-                  </svg>
-                </div>
-                <Image
-                  className="inline-flex"
-                  src={WorflowImg02}
-                  width={350}
-                  height={288}
-                  alt="Workflow 02"
-                />
-                <div className="p-6">
-                  <div className="mb-3">
-                    <span className="btn-sm relative rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-gray-800/60">
-                      <span className="text-transparent bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text">
-                        Mutaxassislik kurslari
-                      </span>
-                    </span>
-                  </div>
-                  <p className="text-indigo-200/65">
-                    Barcha turdagi mutaxassislik kurslarni o'z ichiga olgan o'quv kurslar. Batafsil ma'lumot.
-                  </p>
-                </div>
-              </div>
-            </Link>
-            <Link
-              data-aos="fade-up"
-              data-aos-delay={200}
-              className="group/card relative h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-500/80 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 hover:after:opacity-20 group-hover:before:opacity-100"
-              href="/tariffs"
-            >
-              <div className="relative z-20 h-full overflow-hidden rounded-[inherit] bg-gray-950 after:absolute after:inset-0 after:bg-linear-to-br after:from-gray-900/50 after:via-gray-800/25 after:to-gray-900/50">
-                <div
-                  className="absolute flex items-center justify-center w-8 h-8 text-gray-200 transition-opacity border rounded-full opacity-0 right-6 top-6 border-gray-700/50 bg-gray-800/65 group-hover/card:opacity-100"
-                  aria-hidden="true"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={9}
-                    height={8}
-                    fill="none"
-                  >
-                    <path
-                      fill="#F4F4F5"
-                      d="m4.92 8-.787-.763 2.733-2.68H0V3.443h6.866L4.133.767 4.92 0 9 4 4.92 8Z"
-                    />
-                  </svg>
-                </div>
-                <Image
-                  className="inline-flex"
-                  src={WorflowImg03}
-                  width={350}
-                  height={288}
-                  alt="Workflow 03"
-                />
-                <div className="p-6">
-                  <div className="mb-3">
-                    <span className="btn-sm relative rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-gray-800/60">
-                      <span className="text-transparent bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text">
-                        Tarifli kurslar
-                      </span>
-                    </span>
-                  </div>
-                  <p className="text-indigo-200/65">
-                    Arzonroq narxdagi, professional darajadagi mutaxassislik kurslar paketlarini o'z ichiga oladi. Batafsil ma'lumot.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </Spotlight>
-        </div>
-      </div>
+    <section className="max-w-7xl mx-auto px-8 py-20 grid grid-cols-1 md:grid-cols-3 gap-12">
+      <h2 className="col-span-full text-4xl text-center mb-12 bg-gradient-to-r from-[#beb6ff] via-[#beb6ff]/80 to-[#beb6ff]/80 bg-clip-text text-transparent drop-shadow-lg font-nacelle font-semibold">
+        O'quv kurslar strukturasi
+      </h2>
+      {workflows.map(({ href, title, description, image }, index) => (
+        <TiltCard
+          key={index}
+          href={href}
+          title={title}
+          description={description}
+          image={image}
+        />
+      ))}
     </section>
   );
 }
