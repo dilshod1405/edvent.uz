@@ -69,7 +69,7 @@ export default function Header() {
             {isAuthenticated ? (
               <>
                 <li>
-                  <Link href="/api/dashboard" className="text-sm text-gray-200 hover:underline">
+                  <Link href="/api/dashboard/kurslarim" className="text-sm text-gray-200 hover:underline">
                     {firstname} {lastname}
                   </Link>
                 </li>
