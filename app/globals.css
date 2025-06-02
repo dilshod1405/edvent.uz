@@ -3,3 +3,12 @@
 body {
   color: #4f39f65e;
 }
+
+@keyframes fadeLoop {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+.animate-fade-loop {
+  animation: fadeLoop 2.5s ease-in-out infinite;
+}

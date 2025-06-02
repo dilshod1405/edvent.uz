@@ -37,7 +37,7 @@ export default function Footer() {
                   className="transition text-indigo-200/65 hover:text-indigo-500"
                   href="#0"
                 >
-                  Qurilish
+                  Qurilish muhandisligi
                 </a>
               </li>
               <li>
@@ -121,7 +121,7 @@ export default function Footer() {
                   className="transition text-indigo-200/65 hover:text-indigo-500"
                   href="#0"
                 >
-                  Qurilish normativlari
+                  Qurilish hujjatlari
                 </a>
               </li>
               <li>

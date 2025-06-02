@@ -5,6 +5,15 @@ import Link from "next/link";
 export default function HeroHome() {
   const canvasRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    // LocalStorage dan access tekshirish
+    if (typeof window !== "undefined") {
+      const access = localStorage.getItem("access");
+      setHasAccess(!!access);
+    }
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,7 +27,6 @@ export default function HeroHome() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Mobil uchun nuqtalar soni va maksimal masofa
     const isMobile = window.innerWidth <= 768;
     const pointCount = isMobile ? 40 : 100;
     const maxDist = isMobile ? 70 : 120;
@@ -105,9 +113,9 @@ export default function HeroHome() {
       />
 
       {/* Content container */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center h-full px-6 max-w-[1200px] mx-auto w-full gap-8">
-        {/* Left side: Text and buttons */}
-        <div className="flex flex-col justify-center w-full md:w-1/2 max-w-xl space-y-6 text-center md:text-left">
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center h-full px-6 max-w-[1200px] mx-auto w-full gap-12">
+        {/* Left side: 70% */}
+        <div className="flex flex-col justify-center w-full md:w-[70%] max-w-xl space-y-6 text-center md:text-left min-h-[350px]">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
             Edvent – Kelajak kasblariga yo‘l
           </h1>
@@ -115,12 +123,21 @@ export default function HeroHome() {
             O‘zgarayotgan texnologiyalar olamida zamonaviy ko‘nikmalarga ega bo‘ling
           </p>
           <div className="flex flex-wrap justify-center md:justify-start gap-4">
-            <Link
-              href="/signup"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-medium transition"
-            >
-              Hoziroq boshlash
-            </Link>
+            {hasAccess ? (
+              <Link
+                href="/api/dashboard/kurslarim"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-medium transition"
+              >
+                Kurslarim
+              </Link>
+            ) : (
+              <Link
+                href="/signup"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-medium transition"
+              >
+                Hoziroq boshlash
+              </Link>
+            )}
             <Link
               href="/free-lessons"
               className="border border-white/30 hover:bg-white/10 text-white px-6 py-3 rounded-full font-medium transition"
@@ -130,20 +147,17 @@ export default function HeroHome() {
           </div>
         </div>
 
-        {/* Right side: Figure with play button */}
-        <div className="flex items-center justify-center w-full md:w-1/2">
+        {/* Right side: 30% */}
+        <div className="flex items-center justify-center w-full md:w-[30%] min-h-[350px]">
           <figure
             onClick={() => setModalOpen(true)}
-            className="cursor-pointer rounded-lg bg-white/10 p-10 flex items-center justify-center hover:bg-white/20 transition"
-            style={{ maxWidth: 320, width: "100%", height: 180 }}
+            className="cursor-pointer bg-gradient-to-br from-indigo-600 to-indigo-400 shadow-2xl rounded-full flex items-center justify-center w-36 h-36 sm:w-44 sm:h-44 hover:scale-110 transition-transform duration-300"
           >
-            {/* Play icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-20 w-20 text-white"
+              className="w-20 h-20 sm:w-24 sm:h-24 text-white"
               fill="currentColor"
               viewBox="0 0 24 24"
-              stroke="none"
             >
               <path d="M8 5v14l11-7z" />
             </svg>
