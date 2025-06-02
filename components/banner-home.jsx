@@ -1,64 +1,183 @@
-import VideoThumb from "@/public/images/hero-image-01.jpg";
-import ModalVideo from "@/components/modal-video";
+"use client";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 export default function HeroHome() {
-  return (
-    <section>
-      <div className="max-w-6xl px-4 mx-auto sm:px-6">
-        <div className="py-12 md:py-20">
-          <div className="pb-12 text-center md:pb-20">
-            <h1
-              className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,var(--color-gray-200),var(--color-indigo-200),var(--color-gray-50),var(--color-indigo-300),var(--color-gray-200))] bg-[length:200%_auto] bg-clip-text pb-5 font-nacelle text-4xl font-semibold text-transparent md:text-5xl"
-              data-aos="fade-up"
-            >
-              Edvent - zamonaviy kasblar kaliti
-            </h1>
-            <div className="max-w-3xl mx-auto">
-              <p
-                className="mb-8 text-xl text-indigo-200/65"
-                data-aos="fade-up"
-                data-aos-delay={200}
-              >
-                O'zingizni zamonaviy va raqobatbardosh dunyoga tayyorlash uchun zarur bo'lgan ko'nikmalarni egallash va rivojlantirishda ishonchli hamrohingiz
-              </p>
-              <div className="max-w-xs mx-auto sm:flex sm:max-w-none sm:justify-center">
-                <div data-aos="fade-up" data-aos-delay={400}>
-                  <Link
-                    className="btn group mb-4 w-full bg-linear-to-t from-indigo-600 to-indigo-500 bg-[length:100%_100%] bg-[bottom] text-white shadow-[inset_0px_1px_0px_0px_--theme(--color-white/.16)] hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
-                    href="/signup"
-                  >
-                    <span className="relative inline-flex items-center">
-                      Hoziroq boshlash
-                      <span className="ml-1 tracking-normal text-white/50 transition-transform group-hover:translate-x-0.5">
-                        -&gt;
-                      </span>
-                    </span>
-                  </Link>
-                </div>
-                <div data-aos="fade-up" data-aos-delay={600}>
-                  <Link
-                    className="btn relative w-full bg-linear-to-b from-gray-800 to-gray-800/60 bg-[length:100%_100%] bg-[bottom] text-gray-300 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-[length:100%_150%] sm:ml-4 sm:w-auto"
-                    href="/free-lessons"
-                  >
-                    Bepul darslar
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+  const canvasRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-          <ModalVideo
-            thumb={VideoThumb}
-            thumbWidth={1104}
-            thumbHeight={576}
-            thumbAlt="Video"
-            video="videos//video.mp4"
-            videoWidth={1920}
-            videoHeight={1080}
-          />
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // Mobil uchun nuqtalar soni va maksimal masofa
+    const isMobile = window.innerWidth <= 768;
+    const pointCount = isMobile ? 40 : 100;
+    const maxDist = isMobile ? 70 : 120;
+    const mouseDist = isMobile ? 100 : 150;
+
+    let points = Array.from({ length: pointCount }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 1,
+      vy: (Math.random() - 0.5) * 1,
+    }));
+
+    let mouse = { x: 0, y: 0 };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let p of points) {
+        for (let step = 0; step < 3; step++) {
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.fill();
+      }
+
+      for (let i = 0; i < points.length; i++) {
+        for (let j = i + 1; j < points.length; j++) {
+          const a = points[i];
+          const b = points[j];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if (dist < maxDist) {
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = `rgba(255,255,255,${1 - dist / maxDist})`;
+            ctx.stroke();
+          }
+        }
+      }
+
+      for (let p of points) {
+        const dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+        if (dist < mouseDist) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(173,216,230,${1 - dist / mouseDist})`;
+          ctx.stroke();
+        }
+      }
+
+      requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    const handleMouseMove = (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, []);
+
+  return (
+    <section className="relative w-full h-screen overflow-hidden text-white">
+      {/* Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+        width={typeof window !== "undefined" ? window.innerWidth : 1920}
+        height={typeof window !== "undefined" ? window.innerHeight : 1080}
+      />
+
+      {/* Content container */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center h-full px-6 max-w-[1200px] mx-auto w-full gap-8">
+        {/* Left side: Text and buttons */}
+        <div className="flex flex-col justify-center w-full md:w-1/2 max-w-xl space-y-6 text-center md:text-left">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+            Edvent – Kelajak kasblariga yo‘l
+          </h1>
+          <p className="text-lg sm:text-xl text-slate-300">
+            O‘zgarayotgan texnologiyalar olamida zamonaviy ko‘nikmalarga ega bo‘ling
+          </p>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4">
+            <Link
+              href="/signup"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-medium transition"
+            >
+              Hoziroq boshlash
+            </Link>
+            <Link
+              href="/free-lessons"
+              className="border border-white/30 hover:bg-white/10 text-white px-6 py-3 rounded-full font-medium transition"
+            >
+              Bepul darslar
+            </Link>
+          </div>
+        </div>
+
+        {/* Right side: Figure with play button */}
+        <div className="flex items-center justify-center w-full md:w-1/2">
+          <figure
+            onClick={() => setModalOpen(true)}
+            className="cursor-pointer rounded-lg bg-white/10 p-10 flex items-center justify-center hover:bg-white/20 transition"
+            style={{ maxWidth: 320, width: "100%", height: 180 }}
+          >
+            {/* Play icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-20 w-20 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              stroke="none"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </figure>
         </div>
       </div>
+
+      {/* Modal */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+          onClick={() => setModalOpen(false)}
+        >
+          <div
+            className="relative w-[80vw] max-w-3xl aspect-video bg-black"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              className="w-full h-full"
+              src="/videos/video.mp4"
+              title="Video"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+            />
+            <button
+              onClick={() => setModalOpen(false)}
+              className="absolute top-2 right-2 text-white bg-red-600 rounded-full p-2 hover:bg-red-700 transition"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
