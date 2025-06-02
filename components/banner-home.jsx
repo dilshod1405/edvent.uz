@@ -1,14 +1,15 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function HeroHome() {
   const canvasRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
+  const audioRef = useRef(null);
 
   useEffect(() => {
-    // LocalStorage dan access tekshirish
     if (typeof window !== "undefined") {
       const access = localStorage.getItem("access");
       setHasAccess(!!access);
@@ -104,7 +105,6 @@ export default function HeroHome() {
 
   return (
     <section className="relative w-full h-screen overflow-hidden text-white">
-      {/* Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
@@ -112,10 +112,13 @@ export default function HeroHome() {
         height={typeof window !== "undefined" ? window.innerHeight : 1080}
       />
 
-      {/* Content container */}
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-center h-full px-6 max-w-[1200px] mx-auto w-full gap-12">
-        {/* Left side: 70% */}
-        <div className="flex flex-col justify-center w-full md:w-[70%] max-w-xl space-y-6 text-center md:text-left min-h-[350px]">
+        <motion.div
+          className="flex flex-col justify-center w-full md:w-[70%] max-w-xl space-y-6 text-center md:text-left min-h-[350px]"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
             Edvent – Kelajak kasblariga yo‘l
           </h1>
@@ -145,10 +148,14 @@ export default function HeroHome() {
               Bepul darslar
             </Link>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right side: 30% */}
-        <div className="flex items-center justify-center w-full md:w-[30%] min-h-[350px]">
+        <motion.div
+          className="flex items-center justify-center w-full md:w-[30%] min-h-[350px]"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2 }}
+        >
           <figure
             onClick={() => setModalOpen(true)}
             className="cursor-pointer bg-gradient-to-br from-indigo-600 to-indigo-400 shadow-2xl rounded-full flex items-center justify-center w-36 h-36 sm:w-44 sm:h-44 hover:scale-110 transition-transform duration-300"
@@ -162,10 +169,9 @@ export default function HeroHome() {
               <path d="M8 5v14l11-7z" />
             </svg>
           </figure>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Modal */}
       {modalOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
