@@ -5,13 +5,14 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { BookOpen, Clock } from "lucide-react";
+import { BookOpen, RefreshCcw } from "lucide-react";
 
 const SpecialityDetail = () => {
   const { id } = useParams();
   const router = useRouter();
 
   const [speciality, setSpeciality] = useState(null);
+  const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const SpecialityDetail = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/education/specialities/${id}/`
         );
         setSpeciality(res.data);
+        setCourses(res.data.courses); // faqat shu mutaxassislikka tegishli kurslar
       } catch (err) {
         console.error("Speciality fetch error:", err);
         router.push("/specialities");
@@ -50,15 +52,25 @@ const SpecialityDetail = () => {
 
   return (
     <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
-      {/* Speciality Title */}
-      <motion.h1
-        className="text-4xl md:text-5xl font-extrabold mb-10 text-indigo-400 tracking-wide text-center"
+      {/* Title + loop animation */}
+      <motion.div
+        className="flex items-center justify-center gap-4 mb-10"
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {speciality.title}
-      </motion.h1>
+        <motion.h1 className="text-4xl md:text-5xl font-extrabold text-indigo-400 tracking-wide select-none">
+          {speciality.title}
+        </motion.h1>
+
+        <motion.div
+          className="text-indigo-400"
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
+        >
+          <RefreshCcw size={36} />
+        </motion.div>
+      </motion.div>
 
       {/* Speciality Description */}
       <motion.div
@@ -82,41 +94,38 @@ const SpecialityDetail = () => {
         Kurslar ro‘yxati
       </motion.h2>
 
-      {speciality.courses.length === 0 ? (
+      {courses.length === 0 ? (
         <p className="text-gray-400 text-center">Bu mutaxassislik bo‘yicha kurslar topilmadi.</p>
       ) : (
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {speciality.courses.map((course, idx) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {courses.map((course, idx) => (
             <motion.div
               key={course.id}
-              className="bg-[#0f172a] rounded-3xl shadow-lg border border-indigo-600 hover:shadow-indigo-500/50 hover:border-indigo-500 cursor-pointer transition duration-300 ease-in-out flex flex-col"
+              className="bg-[#0f172a] rounded-3xl p-6 shadow-lg border border-indigo-600 hover:shadow-indigo-500/40 hover:border-indigo-500 cursor-pointer transition duration-400 ease-in-out flex flex-col justify-between"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.15, duration: 0.6 }}
-              whileHover={{ scale: 1.05 }}
+              transition={{ delay: idx * 0.12, duration: 0.6 }}
+              whileHover={{ scale: 1.03, boxShadow: "0 10px 30px rgba(99,102,241,0.4)" }}
             >
-              {/* Course image */}
-              <div className="h-48 w-full rounded-t-3xl overflow-hidden">
+              <div>
                 <img
                   src={`${process.env.NEXT_PUBLIC_API_URL}${course.photo}`}
                   alt={course.title}
-                  className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                  className="w-full h-40 object-cover rounded-xl mb-4"
+                  loading="lazy"
                 />
+                <div className="flex items-center gap-4 mb-4">
+                  <BookOpen className="text-indigo-500 w-6 h-6" />
+                  <h3 className="text-xl font-semibold text-white tracking-tight">{course.title}</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed text-sm line-clamp-5">{course.description}</p>
               </div>
 
-              {/* Course details */}
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-semibold text-white mb-2 tracking-tight">{course.title}</h3>
-                <p className="text-gray-400 text-sm line-clamp-4 mb-4">{course.description}</p>
-
-                <div className="flex items-center gap-2 text-indigo-400 font-semibold mb-4">
-                  <Clock className="w-5 h-5" />
-                  <span>{course.duration}</span>
-                </div>
-
+              <div className="mt-4 flex items-center justify-between text-indigo-400 font-semibold text-sm">
+                <span>⏱ {course.duration} ta moduldan iborat</span>
                 <Link
                   href={`/courses/${course.id}`}
-                  className="mt-auto inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-semibold text-sm tracking-wide text-center transition"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-semibold text-sm tracking-wide transition"
                 >
                   Kursga kirish
                 </Link>
