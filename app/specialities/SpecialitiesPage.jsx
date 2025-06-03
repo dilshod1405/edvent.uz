@@ -34,7 +34,7 @@ const iconMap = {
   "Tilllar": Languages,
   "Arxitektura": Building2,
   "Tibbiyot": Stethoscope,
-  "Iqtisodiyot": Banknote,
+  "Iqtisod": Banknote,
   "Geografiya": Globe,
   "Elektronika": CircuitBoard,
 };
