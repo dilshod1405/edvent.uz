@@ -13,11 +13,11 @@ const SpecialitiesPage = () => {
   useEffect(() => {
     const fetchSpecialities = async () => {
       try {
-        const res = await axios.get("https://api.example.com/specialities");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/specialities/`);
         setSpecialities(res.data);
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching specialities:", err);
+      } finally {
         setLoading(false);
       }
     };
@@ -27,39 +27,43 @@ const SpecialitiesPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#030613] text-white">
-        <p className="text-lg">Yuklanmoqda...</p>
+        <p className="text-lg font-medium tracking-wide">Yuklanmoqda...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#030613] text-white px-4 md:px-16 py-10">
+    <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
       <motion.h1
-        className="text-3xl md:text-4xl font-bold mb-10 text-indigo-400 text-center"
-        initial={{ opacity: 0, y: -20 }}
+        className="text-4xl md:text-5xl font-extrabold mb-12 text-indigo-400 text-center tracking-wide"
+        initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
         Mutaxassisliklar
       </motion.h1>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {specialities.map((spec, index) => (
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {specialities.map((spec, idx) => (
           <motion.div
             key={spec.id}
-            className="bg-[#0f172a] rounded-2xl p-6 shadow-lg border border-indigo-600 hover:shadow-indigo-400/20 transition duration-300"
-            initial={{ opacity: 0, y: 20 }}
+            className="bg-[#0f172a] rounded-3xl p-7 shadow-lg border border-indigo-600 hover:shadow-indigo-500/40 hover:border-indigo-500 cursor-pointer transition duration-400 ease-in-out flex flex-col justify-between"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: idx * 0.12, duration: 0.6 }}
+            whileHover={{ scale: 1.03, boxShadow: "0 10px 30px rgba(99,102,241,0.4)" }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <GraduationCap className="text-indigo-500 w-6 h-6" />
-              <h2 className="text-xl font-semibold text-white">{spec.title}</h2>
+            <div>
+              <div className="flex items-center gap-4 mb-5">
+                <GraduationCap className="text-indigo-500 w-7 h-7" />
+                <h2 className="text-2xl font-semibold text-white tracking-tight">{spec.title}</h2>
+              </div>
+              <p className="text-gray-300 leading-relaxed text-sm line-clamp-5">{spec.description}</p>
             </div>
-            <p className="text-sm text-gray-300 leading-relaxed line-clamp-5">{spec.description}</p>
 
             <Link
               href={`/specialities/${spec.id}`}
-              className="inline-block mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm"
+              className="mt-7 self-start inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-semibold text-sm tracking-wide transition"
             >
               Kurslarni ko‘rish
             </Link>
