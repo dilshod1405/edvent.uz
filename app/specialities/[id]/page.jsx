@@ -8,43 +8,33 @@ import { useParams, useRouter } from "next/navigation";
 import { BookOpen } from "lucide-react";
 
 const SpecialityDetail = () => {
-  const { id } = useParams(); // Next.js app router dan id olish
+  const { id } = useParams();
   const router = useRouter();
 
   const [speciality, setSpeciality] = useState(null);
   const [courses, setCourses] = useState([]);
-  const [loadingSpec, setLoadingSpec] = useState(true);
-  const [loadingCourses, setLoadingCourses] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSpeciality = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/specialities/${id}/`);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/education/specialities/${id}/`
+        );
         setSpeciality(res.data);
+        setCourses(res.data.courses); // faqat shu mutaxassislikka tegishli kurslar
       } catch (err) {
         console.error("Speciality fetch error:", err);
         router.push("/specialities");
       } finally {
-        setLoadingSpec(false);
-      }
-    };
-
-    const fetchCourses = async () => {
-      try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/specialities/${id}/`);
-        setCourses(res.data);
-      } catch (err) {
-        console.error("Courses fetch error:", err);
-      } finally {
-        setLoadingCourses(false);
+        setLoading(false);
       }
     };
 
     fetchSpeciality();
-    fetchCourses();
   }, [id, router]);
 
-  if (loadingSpec || loadingCourses) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#030613] text-white">
         <p className="text-lg font-medium tracking-wide">Yuklanmoqda...</p>
@@ -70,6 +60,7 @@ const SpecialityDetail = () => {
       >
         {speciality.title}
       </motion.h1>
+
       <motion.p
         className="text-gray-300 max-w-4xl mx-auto text-center leading-relaxed mb-12 text-lg line-clamp-6"
         initial={{ opacity: 0 }}
@@ -99,7 +90,7 @@ const SpecialityDetail = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.12, duration: 0.6 }}
-              whileHover={{ scale: 1.03, boxShadow: "0 10px 30px rgba(99,102,241,0.4)" }}
+              whileHover={{ scale: 1.03 }}
             >
               <div>
                 <div className="flex items-center gap-4 mb-4">
