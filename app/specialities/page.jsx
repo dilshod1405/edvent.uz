@@ -1,16 +1,7 @@
-import Footer from '@/components/ui/footer'
-import Header from '@/components/ui/header'
-import React from 'react'
-import SpecialitiesPage from './SpecialitiesPage'
+import SpecialitiesPage from "./SpecialitiesPage";
 
-const page = () => {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <SpecialitiesPage />
-      <Footer />
-    </div>
-  )
-}
+const Specialities = () => {
+  return <SpecialitiesPage />;
+};
 
-export default page
+export default Specialities;
