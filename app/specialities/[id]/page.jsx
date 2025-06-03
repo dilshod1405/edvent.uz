@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { BookOpen, CheckCircle2 } from "lucide-react";
@@ -14,6 +14,7 @@ const SpecialityDetail = () => {
   const [speciality, setSpeciality] = useState(null);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     const fetchSpeciality = async () => {
@@ -33,6 +34,16 @@ const SpecialityDetail = () => {
 
     fetchSpeciality();
   }, [id, router]);
+
+  useEffect(() => {
+    if (courses.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % courses.length);
+    }, 4000); // 4 sekundda bir almashadi
+
+    return () => clearInterval(interval);
+  }, [courses]);
 
   if (loading) {
     return (
@@ -54,7 +65,6 @@ const SpecialityDetail = () => {
     <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
       {/* Roadmap container */}
       <div className="flex flex-col md:flex-row gap-12 max-w-7xl mx-auto mb-20">
-        
         {/* Left: Title & Description */}
         <motion.div
           className="md:w-1/2 bg-[#1e293b] rounded-3xl p-10 shadow-lg border border-indigo-700"
@@ -65,57 +75,68 @@ const SpecialityDetail = () => {
           <h1 className="text-5xl font-extrabold text-indigo-400 mb-6 tracking-tight">
             {speciality.title}
           </h1>
-          <p className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">{speciality.description}</p>
+          <p className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
+            {speciality.description}
+          </p>
         </motion.div>
 
-        {/* Right: Roadmap Steps */}
+        {/* Right: Animated Step */}
         <motion.div
-          className="md:w-1/2 relative"
+          className="md:w-1/2 relative min-h-[200px] flex items-center"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Vertical line */}
           <div className="absolute top-5 left-6 h-full w-1 bg-indigo-600 rounded" />
 
-          {/* Steps */}
-          <ul className="space-y-10 pl-16">
-            {courses.length === 0 && (
-              <li className="text-gray-400">Bu mutaxassislik bo‘yicha kurslar topilmadi.</li>
-            )}
-            {courses.map((course, idx) => (
-              <motion.li
-                key={course.id}
-                className="relative flex items-center gap-4 cursor-default select-none"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.15 }}
-              >
-                {/* Aylanuvchi icon */}
-                <motion.div
-                  className="absolute -left-10 bg-indigo-500 border-2 border-indigo-300 rounded-full w-10 h-10 flex items-center justify-center"
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+          <ul className="pl-16 w-full">
+            <AnimatePresence mode="wait">
+              {courses.length > 0 && (
+                <motion.li
+                  key={courses[currentStep].id}
+                  className="relative flex items-center gap-4 cursor-default select-none"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.8 }}
                 >
-                  <CheckCircle2 className="text-white w-6 h-6" />
-                </motion.div>
+                  <motion.div
+                    className="absolute -left-10 bg-indigo-500 border-2 border-indigo-300 rounded-full w-10 h-10 flex items-center justify-center"
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+                  >
+                    <CheckCircle2 className="text-white w-6 h-6" />
+                  </motion.div>
+                  <span className="text-indigo-300 text-2xl font-semibold tracking-wide">
+                    {courses[currentStep].title}
+                  </span>
+                </motion.li>
+              )}
 
-                {/* Course title */}
-                <span className="text-indigo-300 text-xl font-semibold tracking-wide">{course.title}</span>
-              </motion.li>
-            ))}
+              {courses.length === 0 && (
+                <motion.li
+                  className="text-gray-400"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  Bu mutaxassislik bo‘yicha kurslar topilmadi.
+                </motion.li>
+              )}
+            </AnimatePresence>
           </ul>
         </motion.div>
       </div>
 
-      {/* Kurslar kartalari */}
+      {/* Kurslar ro‘yxati */}
       <motion.h2
         className="text-3xl font-semibold mb-8 text-indigo-300 tracking-wide max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        Kurslar to‘liq ro‘yxati
+        Kurslar ro‘yxati
       </motion.h2>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
