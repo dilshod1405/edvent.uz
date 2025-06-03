@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { BookOpen } from "lucide-react";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const SpecialityDetail = () => {
   const { id } = useParams();
@@ -40,7 +41,7 @@ const SpecialityDetail = () => {
 
     const interval = setInterval(() => {
       setCurrentStep((prev) => (prev + 1) % courses.length);
-    }, 10000);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [courses]);
@@ -48,7 +49,7 @@ const SpecialityDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#030613] text-white">
-        <p className="text-lg font-medium tracking-wide">Yuklanmoqda...</p>
+        <p className="text-lg font-medium tracking-wide"><CircularProgress /></p>
       </div>
     );
   }
