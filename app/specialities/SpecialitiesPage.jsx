@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { SiPython } from "react-icons/si";
 
 // Iconlar
 import {
@@ -23,11 +24,13 @@ import {
 
 // Title asosida icon tanlash
 const iconMap = {
-  "Dasturlash": Code,
+  "Mobile dasturlash": Code,
+  "Frontend": Code,
+  "Python backend": SiPython,
   "Dizayn": Palette,
   "Biologiya": FlaskConical,
   "Informatika": Cpu,
-  "Muhandislik": Hammer,
+  "Qurilish muhandisligi": Hammer,
   "Tilllar": Languages,
   "Arxitektura": Building2,
   "Tibbiyot": Stethoscope,
