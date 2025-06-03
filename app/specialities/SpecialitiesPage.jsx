@@ -27,7 +27,7 @@ import {
 const iconMap = {
   "Mobile dasturlash": Code,
   "Frontend": Code,
-  "Python backend": SiPython,
+  "Python Backend": SiPython,
   "Dizayn": Palette,
   "Biologiya": FlaskConical,
   "Informatika": Cpu,
