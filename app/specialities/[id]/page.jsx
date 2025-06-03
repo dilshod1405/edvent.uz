@@ -91,10 +91,15 @@ const SpecialityDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.15 }}
               >
-                {/* Circle icon on line */}
-                <div className="absolute -left-10 bg-indigo-500 border-2 border-indigo-300 rounded-full w-10 h-10 flex items-center justify-center">
+                {/* Aylanuvchi icon */}
+                <motion.div
+                  className="absolute -left-10 bg-indigo-500 border-2 border-indigo-300 rounded-full w-10 h-10 flex items-center justify-center"
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+                >
                   <CheckCircle2 className="text-white w-6 h-6" />
-                </div>
+                </motion.div>
+
                 {/* Course title */}
                 <span className="text-indigo-300 text-xl font-semibold tracking-wide">{course.title}</span>
               </motion.li>
@@ -138,7 +143,7 @@ const SpecialityDetail = () => {
             </div>
 
             <div className="mt-4 flex items-center justify-between text-indigo-400 font-semibold text-sm">
-              <span>⏱ {course.duration}</span>
+              <span>⏱ {course.duration} ta modul</span>
               <Link
                 href={`/courses/${course.id}`}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-semibold text-sm tracking-wide transition"
