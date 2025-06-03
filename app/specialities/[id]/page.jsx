@@ -5,7 +5,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { BookOpen, CheckCircle2 } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 const SpecialityDetail = () => {
   const { id } = useParams();
@@ -40,7 +40,7 @@ const SpecialityDetail = () => {
 
     const interval = setInterval(() => {
       setCurrentStep((prev) => (prev + 1) % courses.length);
-    }, 4000); // 4 sekundda bir almashadi
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [courses]);
@@ -63,11 +63,34 @@ const SpecialityDetail = () => {
 
   return (
     <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
-      {/* Roadmap container */}
-      <div className="flex flex-col md:flex-row gap-12 max-w-7xl mx-auto mb-20">
-        {/* Left: Title & Description */}
+      {/* Hero & looping card animation */}
+      <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-16 mb-20">
+        {/* Left: looping animated course card */}
+        <div className="w-full lg:w-1/2 relative h-[300px] flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            {courses.length > 0 && (
+              <motion.div
+                key={courses[currentStep].id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -40 }}
+                transition={{ duration: 0.8 }}
+                className="w-full bg-gradient-to-br from-indigo-600/80 to-indigo-400/80 text-white p-8 rounded-3xl shadow-xl border border-indigo-500"
+              >
+                <h3 className="text-3xl font-bold mb-4 tracking-tight">
+                  {courses[currentStep].title}
+                </h3>
+                <p className="text-base text-indigo-100 leading-relaxed line-clamp-4">
+                  {courses[currentStep].description}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Right: Speciality info */}
         <motion.div
-          className="md:w-1/2 bg-[#1e293b] rounded-3xl p-10 shadow-lg border border-indigo-700"
+          className="w-full lg:w-1/2 bg-[#1e293b] rounded-3xl p-10 shadow-lg border border-indigo-700"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
@@ -78,54 +101,6 @@ const SpecialityDetail = () => {
           <p className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
             {speciality.description}
           </p>
-        </motion.div>
-
-        {/* Right: Animated Step */}
-        <motion.div
-          className="md:w-1/2 relative min-h-[200px] flex items-center"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="absolute top-5 left-6 h-full w-1 bg-indigo-600 rounded" />
-
-          <ul className="pl-16 w-full">
-            <AnimatePresence mode="wait">
-              {courses.length > 0 && (
-                <motion.li
-                  key={courses[currentStep].id}
-                  className="relative flex items-center gap-4 cursor-default select-none"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <motion.div
-                    className="absolute -left-10 bg-indigo-500 border-2 border-indigo-300 rounded-full w-10 h-10 flex items-center justify-center"
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
-                  >
-                    <CheckCircle2 className="text-white w-6 h-6" />
-                  </motion.div>
-                  <span className="text-indigo-300 text-2xl font-semibold tracking-wide">
-                    {courses[currentStep].title}
-                  </span>
-                </motion.li>
-              )}
-
-              {courses.length === 0 && (
-                <motion.li
-                  className="text-gray-400"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  Bu mutaxassislik bo‘yicha kurslar topilmadi.
-                </motion.li>
-              )}
-            </AnimatePresence>
-          </ul>
         </motion.div>
       </div>
 
