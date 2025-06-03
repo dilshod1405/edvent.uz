@@ -5,6 +5,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { SiPython } from "react-icons/si";
+import CircularProgress from '@mui/material/CircularProgress';
 
 // Iconlar
 import {
@@ -60,7 +61,7 @@ const SpecialitiesPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#030613] text-white">
-        <p className="text-lg font-medium tracking-wide">Yuklanmoqda...</p>
+        <p className="text-lg font-medium tracking-wide"><CircularProgress /></p>
       </div>
     );
   }
