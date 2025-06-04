@@ -61,6 +61,7 @@ const SpecialityDetail = () => {
     setAudio(audioInstance);
     audioInstance.play().catch(() => {});
 
+    
     const typingInterval = setInterval(() => {
       setTypedText((prev) => prev + typingText[index]);
       index++;
