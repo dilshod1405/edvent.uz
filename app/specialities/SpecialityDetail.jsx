@@ -16,6 +16,8 @@ const SpecialityDetail = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
+  const [typedText, setTypedText] = useState("");
+  const [audio, setAudio] = useState(null);
 
   useEffect(() => {
     const fetchSpeciality = async () => {
@@ -45,6 +47,34 @@ const SpecialityDetail = () => {
 
     return () => clearInterval(interval);
   }, [courses]);
+
+  useEffect(() => {
+    if (!speciality?.description) return;
+
+    const typingText = speciality.description;
+    let index = 0;
+    const speed = 30;
+
+    const audioInstance = new Audio("/keyboard.wav");
+    audioInstance.loop = true;
+    audioInstance.volume = 0.5;
+    setAudio(audioInstance);
+    audioInstance.play().catch(() => {}); // autoplay blocker uchun try
+
+    const typingInterval = setInterval(() => {
+      setTypedText((prev) => prev + typingText[index]);
+      index++;
+      if (index >= typingText.length) {
+        clearInterval(typingInterval);
+        audioInstance.pause();
+      }
+    }, speed);
+
+    return () => {
+      clearInterval(typingInterval);
+      audioInstance.pause();
+    };
+  }, [speciality]);
 
   if (loading) {
     return (
@@ -100,7 +130,7 @@ const SpecialityDetail = () => {
             {speciality.title}
           </h1>
           <p className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
-            {speciality.description}
+            {typedText}
           </p>
         </motion.div>
       </div>
