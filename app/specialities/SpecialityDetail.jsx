@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -11,19 +11,18 @@ import CircularProgress from '@mui/material/CircularProgress';
 const SpecialityDetail = () => {
   const { id } = useParams();
   const router = useRouter();
+
   const [speciality, setSpeciality] = useState(null);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
-  const [typedText, setTypedText] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
-  const audioRef = useRef(null);
-  const typingTimeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchSpeciality = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/specialities/${id}/`);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/education/specialities/${id}/`
+        );
         setSpeciality(res.data);
         setCourses(res.data.courses);
       } catch (err) {
@@ -39,36 +38,13 @@ const SpecialityDetail = () => {
 
   useEffect(() => {
     if (courses.length === 0) return;
+
     const interval = setInterval(() => {
       setCurrentStep((prev) => (prev + 1) % courses.length);
     }, 6000);
+
     return () => clearInterval(interval);
   }, [courses]);
-
-  const handleExpand = () => {
-    if (!speciality?.description) return;
-
-    setIsExpanded(true);
-    setTypedText("");
-
-    let index = 0;
-    const audio = new Audio("/sounds/keyboard.wav");
-    audioRef.current = audio;
-
-    const type = () => {
-      if (index < speciality.description.length) {
-        setTypedText((prev) => prev + speciality.description[index]);
-        audio.play();
-        index++;
-        typingTimeoutRef.current = setTimeout(type, 30);
-      } else {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    };
-
-    type();
-  };
 
   if (loading) {
     return (
@@ -86,11 +62,11 @@ const SpecialityDetail = () => {
     );
   }
 
-  const previewText = speciality.description?.split(" ").slice(0, 15).join(" ") + "...";
-
   return (
     <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
+      {/* Hero & looping card animation */}
       <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-16 mb-20">
+        {/* Left: looping animated course card */}
         <div className="w-full lg:w-1/2 relative h-[300px] flex items-center justify-center">
           <AnimatePresence mode="wait">
             {courses.length > 0 && (
@@ -113,6 +89,7 @@ const SpecialityDetail = () => {
           </AnimatePresence>
         </div>
 
+        {/* Right: Speciality info */}
         <motion.div
           className="w-full lg:w-1/2 bg-[#1e293b] rounded-3xl p-10 shadow-lg border border-indigo-700"
           initial={{ opacity: 0, x: -50 }}
@@ -122,27 +99,13 @@ const SpecialityDetail = () => {
           <h1 className="text-5xl font-extrabold text-indigo-400 mb-6 tracking-tight">
             {speciality.title}
           </h1>
-          <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full" : "max-h-[160px]"}`}>
-            <p className="text-gray-300 leading-relaxed text-lg whitespace-pre-line">
-              {isExpanded ? typedText : previewText}
-            </p>
-            {!isExpanded && (
-              <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#1e293b] to-transparent flex items-end justify-center">
-                <button
-                  className="text-indigo-400 mt-4 font-semibold hover:underline flex items-center"
-                  onClick={handleExpand}
-                >
-                  <span>Read more</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 ml-2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </div>
-            )}
-          </div>
+          <p className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
+            {speciality.description}
+          </p>
         </motion.div>
       </div>
 
+      {/* Kurslar ro‘yxati */}
       <motion.h2
         className="text-3xl font-semibold mb-8 text-indigo-300 tracking-wide max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
