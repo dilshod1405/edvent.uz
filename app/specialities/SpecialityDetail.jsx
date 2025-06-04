@@ -18,6 +18,7 @@ const SpecialityDetail = () => {
   const [typedText, setTypedText] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const audioRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchSpeciality = async () => {
@@ -44,24 +45,30 @@ const SpecialityDetail = () => {
     return () => clearInterval(interval);
   }, [courses]);
 
-  useEffect(() => {
+  const handleExpand = () => {
     if (!speciality?.description) return;
 
-    let index = 0;
+    setIsExpanded(true);
     setTypedText("");
+
+    let index = 0;
     const audio = new Audio("/sounds/keyboard.wav");
     audioRef.current = audio;
 
-    const typing = () => {
+    const type = () => {
       if (index < speciality.description.length) {
         setTypedText((prev) => prev + speciality.description[index]);
         audio.play();
         index++;
-        setTimeout(typing, 30);
+        typingTimeoutRef.current = setTimeout(type, 30);
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
       }
     };
-    typing();
-  }, [speciality]);
+
+    type();
+  };
 
   if (loading) {
     return (
@@ -78,6 +85,8 @@ const SpecialityDetail = () => {
       </div>
     );
   }
+
+  const previewText = speciality.description?.split(" ").slice(0, 15).join(" ") + "...";
 
   return (
     <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
@@ -115,13 +124,13 @@ const SpecialityDetail = () => {
           </h1>
           <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full" : "max-h-[160px]"}`}>
             <p className="text-gray-300 leading-relaxed text-lg whitespace-pre-line">
-              {typedText}
+              {isExpanded ? typedText : previewText}
             </p>
             {!isExpanded && (
               <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#1e293b] to-transparent flex items-end justify-center">
                 <button
                   className="text-indigo-400 mt-4 font-semibold hover:underline flex items-center"
-                  onClick={() => setIsExpanded(true)}
+                  onClick={handleExpand}
                 >
                   <span>Read more</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 ml-2">
