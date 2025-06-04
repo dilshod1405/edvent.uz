@@ -59,7 +59,7 @@ const SpecialityDetail = () => {
     audioInstance.loop = true;
     audioInstance.volume = 0.5;
     setAudio(audioInstance);
-    audioInstance.play().catch(() => {}); // autoplay blocker uchun try
+    audioInstance.play().catch(() => {});
 
     const typingInterval = setInterval(() => {
       setTypedText((prev) => prev + typingText[index]);
