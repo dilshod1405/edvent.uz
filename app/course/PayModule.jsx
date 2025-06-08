@@ -153,7 +153,7 @@ const PayModule = ({ courseId, modules }) => {
               aria-pressed={selectedMethod === id}
               type="button"
             >
-              <img src={logo} alt={label} className="h-6 w-auto" />
+              <img src={logo} alt={label} className="h-18 w-auto" />
               <span className="text-white font-medium">{label}</span>
             </button>
           ))}
@@ -165,10 +165,10 @@ const PayModule = ({ courseId, modules }) => {
       </div>
 
       {error && (
-        <p className="mb-4 text-red-500 font-semibold">❌ {error}</p>
+        <p className="mb-4 text-red-500 font-semibold">❌ Xatolik yuz berdi: {error}</p>
       )}
       {success && (
-        <p className="mb-4 text-green-400 font-semibold">✔️ {success}</p>
+        <p className="mb-4 text-green-400 font-semibold">✔️ Xarid cheki yaratildi: {success}</p>
       )}
 
       <button
