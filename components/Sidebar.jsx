@@ -21,10 +21,10 @@ export default function Sidebar() {
   const [userId, setUserId] = useState(null)
 
   useEffect(() => {
-    // Misol uchun userId ni localStorage dan olamiz
-    const storedUserId = localStorage.getItem('userId')
+    // localStorage dan id kalitini o‘qib olamiz
+    const storedUserId = localStorage.getItem('id')
     if (storedUserId) setUserId(storedUserId)
-    else setUserId('0')
+    else setUserId(null)
   }, [])
 
   const navLinks = [
@@ -37,7 +37,7 @@ export default function Sidebar() {
   const handleLogout = () => {
     localStorage.removeItem('access')
     localStorage.removeItem('refresh')
-    localStorage.removeItem('userId')
+    localStorage.removeItem('id')
     router.push('/signin')
   }
 
