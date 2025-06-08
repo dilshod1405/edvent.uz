@@ -21,13 +21,17 @@ const PayModule = ({ courseId, modules }) => {
   const handleSubmit = async () => {
     if (!selectedModule) return;
 
+    const token = localStorage.getItem("access");
+    if (!token) {
+      window.location.href = "/signin";
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     try {
-      const token = localStorage.getItem("access");
-      if (!token) throw new Error("Avtorizatsiya talab qilinadi.");
       const mod = modules.find((m) => m.id === selectedModule);
 
       const response = await axios.post(
