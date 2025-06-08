@@ -85,7 +85,7 @@ export default function Kurslarim() {
                     href={`/course/${course.id}`}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-lg text-base tracking-wide"
                   >
-                    Kirish
+                    Kursni ko'rish
                   </Link>
                 </div>
               </div>

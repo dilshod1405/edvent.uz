@@ -15,7 +15,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 
 const navLinks = [
-  { name: 'Profil', href: '/api/dashboard/profil', icon: User },
+  { name: 'Profil', href: '/api/dashboard/profile', icon: User },
   { name: 'Kurslarim', href: '/api/dashboard/kurslarim', icon: GraduationCap },
   { name: 'Sertifikatlarim', href: '/api/dashboard/sertifikatlarim', icon: FileBadge },
   { name: 'Imtihonlarim', href: '/api/dashboard/imtihonlar', icon: ClipboardList },
