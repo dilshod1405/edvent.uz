@@ -1,16 +1,30 @@
-import Header from '@/components/ui/header'
-import React from 'react'
-import CourseDetail from '../CourseDetail'
-import Footer from '@/components/ui/footer'
+import Header from '@/components/ui/header';
+import Footer from '@/components/ui/footer';
+import axios from 'axios';
+import CourseDetail from './CourseDetail';
 
-const page = () => {
-  return (
-    <div>
-      <Header />
-      <CourseDetail />
-      <Footer />
-    </div>
-  )
-}
+const Page = async ({ params }) => {
+  const { id } = params;
 
-export default page
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/courses/${id}/`);
+    const course = res.data;
+
+    return (
+      <div>
+        <Header />
+        <CourseDetail course={course} />
+        <Footer />
+      </div>
+    );
+  } catch (error) {
+    console.error("Course not found:", error);
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white bg-black">
+        <p className="text-xl font-bold">Kurs topilmadi yoki yuklanmadi.</p>
+      </div>
+    );
+  }
+};
+
+export default Page;
