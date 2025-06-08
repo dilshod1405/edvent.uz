@@ -77,7 +77,7 @@ const CourseDetail = () => {
             <img
               src={course.teacher.logo}
               alt={course.teacher.name}
-              className="w-16 h-16 rounded-full border border-indigo-600"
+              className="w-16 rounded-full border border-indigo-600"
             />
             <div>
               <p className="text-white font-semibold">
