@@ -18,10 +18,6 @@ const PayModule = ({ courseId, modules }) => {
   const controls = useAnimation();
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  const totalAmount = selectedModule
-    ? modules.find((m) => m.id === selectedModule)?.price || 0
-    : 0;
-
   const handleSubmit = async () => {
     if (!selectedModule) return;
 
@@ -67,7 +63,6 @@ const PayModule = ({ courseId, modules }) => {
     }
   };
 
-  // Scroll animatsiyasi
   useEffect(() => {
     const onScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight;
@@ -90,6 +85,9 @@ const PayModule = ({ courseId, modules }) => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [controls, hasAnimated]);
 
+  const selectedPrice =
+    selectedModule && modules.find((m) => m.id === selectedModule)?.price || 0;
+
   return (
     <motion.div
       id="pay-module-section"
@@ -97,35 +95,39 @@ const PayModule = ({ courseId, modules }) => {
       animate={controls}
       className="max-w-6xl mx-auto bg-[#0f172a] border border-indigo-700 rounded-2xl p-6 mt-12"
     >
-      <h3 className="text-2xl font-semibold text-indigo-300 mb-6">Modul uchun to‘lov</h3>
+      <h3 className="text-2xl font-semibold text-indigo-300 mb-6">Modullar uchun to‘lov</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-h-64 overflow-y-auto">
         {modules.length === 0 ? (
           <p className="text-gray-400 italic">To‘lov uchun tanlanadigan modul yo‘q.</p>
         ) : (
-          modules.map((mod) => (
-            <label
-              key={mod.id}
-              className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer
-                ${
-                  selectedModule === mod.id
-                    ? "border-indigo-400 bg-indigo-900"
-                    : "border-indigo-700 hover:border-indigo-500"
-                }`}
-            >
-              <input
-                type="radio"
-                name="module"
-                checked={selectedModule === mod.id}
-                onChange={() => setSelectedModule(mod.id)}
-                className="w-5 h-5 cursor-pointer accent-indigo-400"
-              />
-              <div>
-                <p className="font-semibold text-white">{mod.title}</p>
+          modules.map((mod) => {
+            const isSelected = selectedModule === mod.id;
+            return (
+              <div
+                key={mod.id}
+                onClick={() => setSelectedModule(mod.id)}
+                className={`relative p-4 rounded-xl border cursor-pointer transition-all duration-300 group
+                  ${
+                    isSelected
+                      ? "border-indigo-400 bg-indigo-900 shadow-lg ring-1 ring-indigo-500"
+                      : "border-indigo-700 bg-[#1e293b] hover:border-indigo-500 hover:bg-indigo-800"
+                  }`}
+              >
+                <div
+                  className={`absolute top-4 right-4 w-3 h-3 rounded-full transition-all duration-300 ${
+                    isSelected ? "bg-green-400 shadow-md shadow-green-400/50" : "bg-gray-500"
+                  }`}
+                />
+                <p className="text-white font-semibold mb-1">{mod.title}</p>
                 <p className="text-indigo-400 text-sm">💸 {mod.price.toLocaleString()} so‘m</p>
+
+                {isSelected && (
+                  <div className="absolute inset-0 rounded-xl border-2 border-indigo-500 animate-pulse pointer-events-none" />
+                )}
               </div>
-            </label>
-          ))
+            );
+          })
         )}
       </div>
 
@@ -145,7 +147,7 @@ const PayModule = ({ courseId, modules }) => {
               aria-pressed={selectedMethod === id}
               type="button"
             >
-              <img src={logo} alt={label} className="h-18 w-auto" />
+              <img src={logo} alt={label} className="h-6 w-auto" />
               <span className="text-white font-medium">{label}</span>
             </button>
           ))}
@@ -153,7 +155,8 @@ const PayModule = ({ courseId, modules }) => {
       </div>
 
       <div className="mb-6 text-indigo-300 font-semibold">
-        Umumiy summa: <span className="text-indigo-400">{totalAmount.toLocaleString()} so‘m</span>
+        Umumiy summa:{" "}
+        <span className="text-indigo-400">{selectedPrice.toLocaleString()} so‘m</span>
       </div>
 
       {error && (
@@ -166,7 +169,7 @@ const PayModule = ({ courseId, modules }) => {
       <button
         disabled={loading || !selectedModule}
         onClick={handleSubmit}
-        className={`w-full py-3 rounded-lg text-white font-semibold transition
+        className={`w-full py-3 rounded-lg text-white font-semibold transition hover:cursor-pointer
           ${
             loading || !selectedModule
               ? "bg-indigo-900 cursor-not-allowed"
