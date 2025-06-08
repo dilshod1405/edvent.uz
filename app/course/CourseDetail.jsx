@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, Video } from "lucide-react";
@@ -76,10 +77,12 @@ const CourseDetail = () => {
             <img
               src={course.teacher.logo}
               alt={course.teacher.name}
-              className="w-14 h-14 rounded-full border border-indigo-600"
+              className="w-16 h-16 rounded-full border border-indigo-600"
             />
             <div>
-              <p className="text-white font-semibold">{course.teacher.name}</p>
+              <p className="text-white font-semibold">
+                Mentor: {course.teacher.name}
+              </p>
               <p className="text-sm text-indigo-300">
                 {course.teacher.profession} — {course.teacher.company}
               </p>
@@ -148,8 +151,11 @@ const CourseDetail = () => {
                         className="flex items-center gap-3 text-gray-300 text-sm border-b border-indigo-700 pb-2"
                       >
                         <Video className="w-4 h-4 text-indigo-500" />
-                        <Link href={`/lesson/${lesson.id}`} className="hover:underline">
-                            <span>{lesson.title}</span>
+                        <Link
+                          href={`/lesson/video/${lesson.id}`}
+                          className="hover:underline"
+                        >
+                          <span>{lesson.title}</span>
                         </Link>
                         <span className="ml-auto text-indigo-400">
                           ⏱ {lesson.duration}
