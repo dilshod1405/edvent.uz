@@ -24,7 +24,7 @@ export default function Sidebar() {
     // Misol uchun userId ni localStorage dan olamiz
     const storedUserId = localStorage.getItem('userId')
     if (storedUserId) setUserId(storedUserId)
-    else setUserId('0') // fallback yoki anonim ID
+    else setUserId('0')
   }, [])
 
   const navLinks = [
