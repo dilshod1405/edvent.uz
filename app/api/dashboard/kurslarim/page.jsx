@@ -80,7 +80,7 @@ export default function Kurslarim() {
                   </p>
                 </div>
                 <div className="mt-5 flex items-center justify-between text-indigo-400 font-semibold text-base">
-                  <span>⏱ {course.duration} oy</span>
+                  <span>⏱ {course.duration} ta modul</span>
                   <Link
                     href={`/course/${course.id}`}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-lg text-base tracking-wide"
