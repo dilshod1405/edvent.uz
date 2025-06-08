@@ -146,7 +146,9 @@ const CourseDetail = () => {
               <button onClick={() => toggleModule(module.id)} className="w-full flex justify-between items-center text-left">
                 <div>
                   <h3 className="text-xl font-semibold text-white">{module.title}</h3>
-                  <p className="text-sm text-indigo-400">💸 {module.price.toLocaleString()} so‘m</p>
+                    {!isPaid && (
+                        <p className="text-sm text-indigo-400">💸 {module.price.toLocaleString()} so‘m</p>
+                    )}
                 </div>
                 {openModuleId === module.id ? (
                   <ChevronUp className="text-indigo-400" />
