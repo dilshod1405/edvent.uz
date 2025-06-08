@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 
 const paymentMethods = [
   {
     id: "payme",
     label: "Payme",
-    logo: "/logos/payme.svg", // Sizning public papkangizda bo'lishi kerak
+    logo: "/images/payme.png",
   },
   {
     id: "click",
     label: "Click",
-    logo: "/logos/click.svg",
+    logo: "/images/click.png",
   },
 ];
 
@@ -23,6 +23,8 @@ const PayModule = ({ courseId, modules }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const controls = useAnimation();
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   const toggleModuleSelection = (moduleId) => {
     setSelectedModules((prev) =>
@@ -43,19 +45,17 @@ const PayModule = ({ courseId, modules }) => {
     setSuccess(null);
 
     try {
-      // Agar backend bir nechta modulni bitta requestda qabul qilmasa,
-      // har bir modul uchun alohida request yuboramiz (parallel)
       const token = localStorage.getItem("access");
       if (!token) throw new Error("Avtorizatsiya talab qilinadi.");
 
       const requests = selectedModules.map((moduleId) => {
         const mod = modules.find((m) => m.id === moduleId);
         return axios.post(
-          "https://archedu.uz/payment/transactions/create/",
+          `${process.env.NEXT_PUBLIC_API_URL}/payment/create-payment/`,
           {
             course: courseId,
             module: moduleId,
-            tariff: 0, // Agar kerak bo‘lsa, qo‘shish mumkin
+            tariff: 0,
             amount: mod.price,
             payment_type: selectedMethod,
           },
@@ -67,9 +67,8 @@ const PayModule = ({ courseId, modules }) => {
         );
       });
 
-      const responses = await Promise.all(requests);
+      await Promise.all(requests);
 
-      // Hamma muvaffaqiyatli bo‘lsa:
       setSuccess("To‘lovlar muvaffaqiyatli boshlaldi. Iltimos, ko‘rsatmalarga amal qiling.");
       setSelectedModules([]);
     } catch (err) {
@@ -79,11 +78,39 @@ const PayModule = ({ courseId, modules }) => {
     }
   };
 
+  // Scroll event for animation trigger
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const element = document.getElementById("pay-module-section");
+      if (!element) return;
+
+      const elementTop = element.offsetTop;
+
+      // Agar element ekranga yaqin kelsa va hali animation bo'lmagan bo'lsa
+      if (scrollPosition > elementTop + 100 && !hasAnimated) {
+        controls.start({
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.8, ease: "easeOut" },
+        });
+        setHasAnimated(true);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [controls, hasAnimated]);
+
   return (
-    <div className="max-w-6xl mx-auto bg-[#0f172a] border border-indigo-700 rounded-2xl p-6 mt-12">
+    <motion.div
+      id="pay-module-section"
+      initial={{ opacity: 0, y: 40 }}
+      animate={controls}
+      className="max-w-6xl mx-auto bg-[#0f172a] border border-indigo-700 rounded-2xl p-6 mt-12"
+    >
       <h3 className="text-2xl font-semibold text-indigo-300 mb-6">Modullar uchun to‘lov</h3>
 
-      {/* Modul tanlash */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-h-64 overflow-y-auto">
         {modules.length === 0 ? (
           <p className="text-gray-400 italic">To‘lov uchun tanlanadigan modul yo‘q.</p>
@@ -113,7 +140,6 @@ const PayModule = ({ courseId, modules }) => {
         )}
       </div>
 
-      {/* To‘lov turi tanlash */}
       <div className="mb-6">
         <p className="mb-2 text-indigo-300 font-semibold">To‘lov turi tanlang:</p>
         <div className="flex gap-6">
@@ -137,12 +163,10 @@ const PayModule = ({ courseId, modules }) => {
         </div>
       </div>
 
-      {/* Umumiy summa */}
       <div className="mb-6 text-indigo-300 font-semibold">
         Umumiy summa: <span className="text-indigo-400">{totalAmount.toLocaleString()} so‘m</span>
       </div>
 
-      {/* Xabarlar */}
       {error && (
         <p className="mb-4 text-red-500 font-semibold">
           ❌ {error}
@@ -154,7 +178,6 @@ const PayModule = ({ courseId, modules }) => {
         </p>
       )}
 
-      {/* To‘lov tugmasi */}
       <button
         disabled={loading || selectedModules.length === 0}
         onClick={handleSubmit}
@@ -167,7 +190,7 @@ const PayModule = ({ courseId, modules }) => {
       >
         {loading ? "To‘lov jarayoni..." : "To‘lovni boshlash"}
       </button>
-    </div>
+    </motion.div>
   );
 };
 
