@@ -6,9 +6,13 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+      primary: '#4F39F6',
+    }
+    },
   },
   plugins: [
-    forms({ strategy: 'base' }), // 👈 plugin and strategy here
+    forms({ strategy: 'base' }), 
   ],
 }

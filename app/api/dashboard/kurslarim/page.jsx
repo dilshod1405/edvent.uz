@@ -35,8 +35,10 @@ export default function Kurslarim() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
-        <h1 className="text-3xl font-bold mb-10 text-indigo-400">Mening Kurslarim</h1>
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 py-8 md:py-12 text-white bg-[#030613]">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-10 text-indigo-400">
+          Mening Kurslarim
+        </h1>
 
         {loading ? (
           <div className="flex justify-center items-center h-60">
@@ -45,29 +47,31 @@ export default function Kurslarim() {
         ) : courses.length === 0 ? (
           <p className="text-gray-400">Siz hali hech qanday kurs sotib olmadingiz.</p>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {courses.map((course) => (
               <div
                 key={course.id}
-                className="bg-[#0f172a] rounded-3xl p-6 shadow-lg border border-indigo-600 hover:shadow-indigo-500/40 hover:border-indigo-500 transition duration-300 cursor-pointer flex flex-col justify-between"
+                className="bg-[#0f172a] rounded-2xl p-5 shadow-md border border-indigo-600 hover:shadow-indigo-500/30 hover:border-indigo-500 transition duration-300 flex flex-col justify-between"
               >
                 <div>
                   <img
                     src={course.photo}
                     alt={course.title}
-                    className="w-full h-40 object-cover rounded-xl mb-4"
+                    className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-xl mb-4"
                   />
-                  <div className="flex items-center gap-3 mb-3">
-                    <BookOpen className="text-indigo-500 w-6 h-6" />
-                    <h3 className="text-xl font-semibold text-white">{course.title}</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <BookOpen className="text-indigo-500 w-5 h-5 sm:w-6 sm:h-6" />
+                    <h3 className="text-lg sm:text-xl font-semibold text-white">{course.title}</h3>
                   </div>
-                  <p className="text-gray-300 text-sm leading-relaxed line-clamp-5">{course.description}</p>
+                  <p className="text-gray-300 text-sm sm:text-[15px] leading-relaxed line-clamp-5">
+                    {course.description}
+                  </p>
                 </div>
                 <div className="mt-4 flex items-center justify-between text-indigo-400 font-semibold text-sm">
                   <span>⏱ {course.duration} oy</span>
                   <Link
                     href={`/course/${course.id}`}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm tracking-wide"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm tracking-wide"
                   >
                     Kirish
                   </Link>
