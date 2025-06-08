@@ -10,7 +10,7 @@ export default function LessonsList({ currentLessonId, moduleLessons, moduleName
           return (
             <li key={lesson.id}>
               <Link
-                href={`/lesson/${lesson.id}`}
+                href={`/lesson/video/${lesson.id}`}
                 className={`block px-3 py-2 rounded-md font-medium transition-colors duration-200 ${
                   isActive
                     ? 'bg-[#4F39F6] text-white'
