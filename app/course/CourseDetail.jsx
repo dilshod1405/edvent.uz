@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, Video } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
 
+import PayModule from "./PayModule";
+
 const CourseDetail = () => {
   const { id } = useParams();
   const router = useRouter();
@@ -197,6 +199,13 @@ const CourseDetail = () => {
           );
         })}
       </div>
+
+      {course && (
+        <PayModule
+          courseId={course.id}
+          modules={course.modules.filter((m) => !isPaidModules[m.id])}
+        />
+      )}
     </div>
   );
 };
