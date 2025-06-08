@@ -74,11 +74,13 @@ const CourseDetail = () => {
           </p>
 
           <div className="flex items-center gap-4 mt-6">
-            <img
-              src={course.teacher.logo}
-              alt={course.teacher.name}
-              className="w-16 rounded-full border border-indigo-600"
-            />
+            <div className="w-16 h-16 rounded-full overflow-hidden border border-indigo-600">
+                <img
+                    src={course.teacher.logo}
+                    alt={course.teacher.name}
+                    className="w-full h-full object-cover"
+                />
+            </div>
             <div>
               <p className="text-white font-semibold">
                 Mentor: {course.teacher.name}
