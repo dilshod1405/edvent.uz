@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, BookOpen, Video } from "lucide-react";
+import { ChevronDown, ChevronUp, Video } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const CourseDetail = () => {
@@ -16,6 +16,8 @@ const CourseDetail = () => {
   const [openModuleId, setOpenModuleId] = useState(null);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchCourse = async () => {
       try {
         const res = await axios.get(
@@ -23,7 +25,7 @@ const CourseDetail = () => {
         );
         setCourse(res.data);
       } catch (err) {
-        console.error("Course fetch error:", err);
+        console.error("Kursni yuklashda xatolik:", err);
         router.push("/specialities");
       } finally {
         setLoading(false);
@@ -55,7 +57,7 @@ const CourseDetail = () => {
 
   return (
     <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
-      {/* Header */}
+      {/* Kurs ma'lumotlari */}
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16">
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -78,7 +80,9 @@ const CourseDetail = () => {
             />
             <div>
               <p className="text-white font-semibold">{course.teacher.name}</p>
-              <p className="text-sm text-indigo-300">{course.teacher.profession} — {course.teacher.company}</p>
+              <p className="text-sm text-indigo-300">
+                {course.teacher.profession} — {course.teacher.company}
+              </p>
             </div>
           </div>
         </motion.div>
@@ -93,7 +97,7 @@ const CourseDetail = () => {
         />
       </div>
 
-      {/* Modules */}
+      {/* Modullar */}
       <motion.h2
         className="text-3xl font-semibold mb-8 text-indigo-300 tracking-wide max-w-6xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
@@ -117,7 +121,9 @@ const CourseDetail = () => {
                 <h3 className="text-xl font-semibold text-white">
                   {module.title}
                 </h3>
-                <p className="text-sm text-indigo-400">💸 {module.price.toLocaleString()} so‘m</p>
+                <p className="text-sm text-indigo-400">
+                  💸 {module.price.toLocaleString()} so‘m
+                </p>
               </div>
               {openModuleId === module.id ? (
                 <ChevronUp className="text-indigo-400" />
