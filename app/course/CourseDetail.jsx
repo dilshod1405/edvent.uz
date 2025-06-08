@@ -15,15 +15,14 @@ const CourseDetail = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openModuleId, setOpenModuleId] = useState(null);
+  const [isPaidModules, setIsPaidModules] = useState({});
 
   useEffect(() => {
     if (!id) return;
 
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/education/courses/${id}/`
-        );
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/courses/${id}/`);
         setCourse(res.data);
       } catch (err) {
         console.error("Kursni yuklashda xatolik:", err);
@@ -35,6 +34,36 @@ const CourseDetail = () => {
 
     fetchCourse();
   }, [id, router]);
+
+  useEffect(() => {
+    if (!course) return;
+
+    const fetchPaymentStatuses = async () => {
+      const token = localStorage.getItem("access");
+      if (!token) return;
+
+      const statuses = {};
+      await Promise.all(
+        course.modules.map(async (module) => {
+          try {
+            const res = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_URL}/payment/check-payment-status/?module_id=${module.id}`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+            statuses[module.id] = res.data.status === "paid";
+          } catch (err) {
+            console.error(`Module ${module.id} uchun to'lov tekshirib bo'lmadi`, err);
+            statuses[module.id] = false;
+          }
+        })
+      );
+      setIsPaidModules(statuses);
+    };
+
+    fetchPaymentStatuses();
+  }, [course]);
 
   const toggleModule = (moduleId) => {
     setOpenModuleId((prev) => (prev === moduleId ? null : moduleId));
@@ -69,22 +98,18 @@ const CourseDetail = () => {
           <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-400">
             {course.title}
           </h1>
-          <p className="text-gray-300 text-lg leading-relaxed">
-            {course.description}
-          </p>
+          <p className="text-gray-300 text-lg leading-relaxed">{course.description}</p>
 
           <div className="flex items-center gap-4 mt-6">
             <div className="w-16 h-16 rounded-full overflow-hidden border border-indigo-600">
-                <img
-                    src={course.teacher.logo}
-                    alt={course.teacher.name}
-                    className="w-full h-full object-cover"
-                />
+              <img
+                src={course.teacher.logo}
+                alt={course.teacher.name}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
-              <p className="text-white font-semibold">
-                Mentor: {course.teacher.name}
-              </p>
+              <p className="text-white font-semibold">Mentor: {course.teacher.name}</p>
               <p className="text-sm text-indigo-300">
                 {course.teacher.profession} — {course.teacher.company}
               </p>
@@ -113,67 +138,62 @@ const CourseDetail = () => {
       </motion.h2>
 
       <div className="max-w-6xl mx-auto space-y-4">
-        {course.modules.map((module) => (
-          <div
-            key={module.id}
-            className="bg-[#0f172a] border border-indigo-700 rounded-2xl p-6"
-          >
-            <button
-              onClick={() => toggleModule(module.id)}
-              className="w-full flex justify-between items-center text-left"
-            >
-              <div>
-                <h3 className="text-xl font-semibold text-white">
-                  {module.title}
-                </h3>
-                <p className="text-sm text-indigo-400">
-                  💸 {module.price.toLocaleString()} so‘m
-                </p>
-              </div>
-              {openModuleId === module.id ? (
-                <ChevronUp className="text-indigo-400" />
-              ) : (
-                <ChevronDown className="text-indigo-400" />
-              )}
-            </button>
+        {course.modules.map((module) => {
+          const isPaid = isPaidModules[module.id];
 
-            <AnimatePresence>
-              {openModuleId === module.id && (
-                <motion.ul
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="mt-4 pl-4 space-y-2 overflow-hidden"
-                >
-                  {module.lessons.length > 0 ? (
-                    module.lessons.map((lesson) => (
-                      <li
-                        key={lesson.id}
-                        className="flex items-center gap-3 text-gray-300 text-sm border-b border-indigo-700 pb-2"
-                      >
-                        <Video className="w-4 h-4 text-indigo-500" />
-                        <Link
-                          href={`/lesson/video/${lesson.id}`}
-                          className="hover:underline"
+          return (
+            <div key={module.id} className="bg-[#0f172a] border border-indigo-700 rounded-2xl p-6">
+              <button onClick={() => toggleModule(module.id)} className="w-full flex justify-between items-center text-left">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">{module.title}</h3>
+                  <p className="text-sm text-indigo-400">💸 {module.price.toLocaleString()} so‘m</p>
+                </div>
+                {openModuleId === module.id ? (
+                  <ChevronUp className="text-indigo-400" />
+                ) : (
+                  <ChevronDown className="text-indigo-400" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {openModuleId === module.id && (
+                  <motion.ul
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="mt-4 pl-4 space-y-2 overflow-hidden"
+                  >
+                    {module.lessons.length > 0 ? (
+                      module.lessons.map((lesson) => (
+                        <li
+                          key={lesson.id}
+                          className="flex items-center gap-3 text-gray-300 text-sm border-b border-indigo-700 pb-2"
                         >
-                          <span>{lesson.title}</span>
-                        </Link>
-                        <span className="ml-auto text-indigo-400">
-                          ⏱ {lesson.duration}
-                        </span>
+                          <Video className={`w-4 h-4 ${isPaid ? "text-indigo-500" : "text-gray-500"}`} />
+                          {isPaid ? (
+                            <Link href={`/lesson/video/${lesson.id}`} className="hover:underline">
+                              <span>{lesson.title}</span>
+                            </Link>
+                          ) : (
+                            <span className="text-gray-500 cursor-not-allowed flex items-center gap-1">
+                              {lesson.title} <span className="text-red-400">🔒</span>
+                            </span>
+                          )}
+                          <span className="ml-auto text-indigo-400">⏱ {lesson.duration}</span>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-sm text-gray-400 italic">
+                        Bu modulda hozircha darslar mavjud emas.
                       </li>
-                    ))
-                  ) : (
-                    <li className="text-sm text-gray-400 italic">
-                      Bu modulda hozircha darslar mavjud emas.
-                    </li>
-                  )}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
+                    )}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
