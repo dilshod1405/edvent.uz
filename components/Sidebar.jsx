@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Menu,
@@ -14,21 +14,30 @@ import {
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-const navLinks = [
-  { name: 'Profil', href: '/api/dashboard/profile', icon: User },
-  { name: 'Kurslarim', href: '/api/dashboard/kurslarim', icon: GraduationCap },
-  { name: 'Sertifikatlarim', href: '/api/dashboard/sertifikatlarim', icon: FileBadge },
-  { name: 'Imtihonlarim', href: '/api/dashboard/imtihonlar', icon: ClipboardList },
-]
-
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+  const [userId, setUserId] = useState(null)
+
+  useEffect(() => {
+    // Misol uchun userId ni localStorage dan olamiz
+    const storedUserId = localStorage.getItem('userId')
+    if (storedUserId) setUserId(storedUserId)
+    else setUserId('0') // fallback yoki anonim ID
+  }, [])
+
+  const navLinks = [
+    { name: 'Profil', href: userId ? `/api/dashboard/profile/${userId}` : '/api/dashboard/profile', icon: User },
+    { name: 'Kurslarim', href: '/api/dashboard/kurslarim', icon: GraduationCap },
+    { name: 'Sertifikatlarim', href: '/api/dashboard/sertifikatlarim', icon: FileBadge },
+    { name: 'Imtihonlarim', href: '/api/dashboard/imtihonlar', icon: ClipboardList },
+  ]
 
   const handleLogout = () => {
     localStorage.removeItem('access')
     localStorage.removeItem('refresh')
+    localStorage.removeItem('userId')
     router.push('/signin')
   }
 
