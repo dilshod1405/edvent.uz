@@ -51,7 +51,7 @@ const PayModule = ({ courseId, modules }) => {
       const requests = selectedModules.map((moduleId) => {
         const mod = modules.find((m) => m.id === moduleId);
         return axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/payment/create-payment/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/payment/transactions/create/`,
           {
             course: courseId,
             module: moduleId,
@@ -181,7 +181,7 @@ const PayModule = ({ courseId, modules }) => {
       <button
         disabled={loading || selectedModules.length === 0}
         onClick={handleSubmit}
-        className={`w-full py-3 rounded-lg text-white font-semibold transition
+        className={`w-full py-3 rounded-lg text-white font-semibold transition hover:cursor-pointer
           ${
             loading || selectedModules.length === 0
               ? "bg-indigo-900 cursor-not-allowed"
