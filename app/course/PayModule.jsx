@@ -5,16 +5,8 @@ import axios from "axios";
 import { motion, useAnimation } from "framer-motion";
 
 const paymentMethods = [
-  {
-    id: "payme",
-    label: "Payme",
-    logo: "/images/payme.png",
-  },
-  {
-    id: "click",
-    label: "Click",
-    logo: "/images/click.png",
-  },
+  { id: "payme", label: "Payme", logo: "/images/payme.png" },
+  { id: "click", label: "Click", logo: "/images/click.png" },
 ];
 
 const PayModule = ({ courseId, modules }) => {
@@ -47,19 +39,16 @@ const PayModule = ({ courseId, modules }) => {
     try {
       const token = localStorage.getItem("access");
       if (!token) throw new Error("Avtorizatsiya talab qilinadi.");
-
-      // Hozir uchun faqat birinchi modul uchun to'lov so'rovini yuboramiz
-      // Agar backend bir nechta modulni bitta requestda qabul qilmasa, har birini alohida yuborish kerak
       const moduleId = selectedModules[0];
       const mod = modules.find((m) => m.id === moduleId);
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/payment/transactions/create/`,
         {
-          course: courseId,
+          course: null,
           module: moduleId,
-          tariff: 0,
-          amount: mod.price,
+          tariff: null,
+          amount: Number(mod.price),
           payment_type: selectedMethod,
         },
         {
@@ -70,16 +59,17 @@ const PayModule = ({ courseId, modules }) => {
       );
 
       // Backenddan to'lov linkini olamiz
-      const paymeLink = response.data.payme_link || response.data.click_link;
+      const payLink = response.data.payme_link || response.data.click_link;
 
-      if (paymeLink) {
-        window.location.href = paymeLink;
+      if (payLink) {
+        window.location.href = payLink;
       } else {
         setSuccess("To‘lov yaratildi, ammo to‘lov linki topilmadi.");
       }
 
       setSelectedModules([]);
     } catch (err) {
+      console.error(err.response?.data || err.message);
       setError(err.response?.data?.detail || err.message || "Noma’lum xatolik yuz berdi.");
     } finally {
       setLoading(false);
@@ -175,14 +165,10 @@ const PayModule = ({ courseId, modules }) => {
       </div>
 
       {error && (
-        <p className="mb-4 text-red-500 font-semibold">
-          ❌ {error}
-        </p>
+        <p className="mb-4 text-red-500 font-semibold">❌ {error}</p>
       )}
       {success && (
-        <p className="mb-4 text-green-400 font-semibold">
-          ✔️ {success}
-        </p>
+        <p className="mb-4 text-green-400 font-semibold">✔️ {success}</p>
       )}
 
       <button
