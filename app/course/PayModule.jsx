@@ -10,7 +10,7 @@ const paymentMethods = [
 ];
 
 const PayModule = ({ courseId, modules }) => {
-  const [selectedModules, setSelectedModules] = useState([]);
+  const [selectedModule, setSelectedModule] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState(paymentMethods[0].id);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -18,19 +18,12 @@ const PayModule = ({ courseId, modules }) => {
   const controls = useAnimation();
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  const toggleModuleSelection = (moduleId) => {
-    setSelectedModules((prev) =>
-      prev.includes(moduleId) ? prev.filter((id) => id !== moduleId) : [...prev, moduleId]
-    );
-  };
-
-  const totalAmount = selectedModules.reduce((sum, id) => {
-    const mod = modules.find((m) => m.id === id);
-    return mod ? sum + mod.price : sum;
-  }, 0);
+  const totalAmount = selectedModule
+    ? modules.find((m) => m.id === selectedModule)?.price || 0
+    : 0;
 
   const handleSubmit = async () => {
-    if (selectedModules.length === 0) return;
+    if (!selectedModule) return;
 
     setLoading(true);
     setError(null);
@@ -39,14 +32,13 @@ const PayModule = ({ courseId, modules }) => {
     try {
       const token = localStorage.getItem("access");
       if (!token) throw new Error("Avtorizatsiya talab qilinadi.");
-      const moduleId = selectedModules[0];
-      const mod = modules.find((m) => m.id === moduleId);
+      const mod = modules.find((m) => m.id === selectedModule);
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/payment/transactions/create/`,
         {
           course: null,
-          module: moduleId,
+          module: selectedModule,
           tariff: null,
           amount: Number(mod.price),
           payment_type: selectedMethod,
@@ -58,7 +50,6 @@ const PayModule = ({ courseId, modules }) => {
         }
       );
 
-      // Backenddan to'lov linkini olamiz
       const payLink = response.data.payme_link || response.data.click_link;
 
       if (payLink) {
@@ -67,7 +58,7 @@ const PayModule = ({ courseId, modules }) => {
         setSuccess("To‘lov yaratildi, ammo to‘lov linki topilmadi.");
       }
 
-      setSelectedModules([]);
+      setSelectedModule(null);
     } catch (err) {
       console.error(err.response?.data || err.message);
       setError(err.response?.data?.detail || err.message || "Noma’lum xatolik yuz berdi.");
@@ -76,7 +67,7 @@ const PayModule = ({ courseId, modules }) => {
     }
   };
 
-  // Scroll event for animation trigger
+  // Scroll animatsiyasi
   useEffect(() => {
     const onScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight;
@@ -106,7 +97,7 @@ const PayModule = ({ courseId, modules }) => {
       animate={controls}
       className="max-w-6xl mx-auto bg-[#0f172a] border border-indigo-700 rounded-2xl p-6 mt-12"
     >
-      <h3 className="text-2xl font-semibold text-indigo-300 mb-6">Modullar uchun to‘lov</h3>
+      <h3 className="text-2xl font-semibold text-indigo-300 mb-6">Modul uchun to‘lov</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-h-64 overflow-y-auto">
         {modules.length === 0 ? (
@@ -117,15 +108,16 @@ const PayModule = ({ courseId, modules }) => {
               key={mod.id}
               className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer
                 ${
-                  selectedModules.includes(mod.id)
+                  selectedModule === mod.id
                     ? "border-indigo-400 bg-indigo-900"
                     : "border-indigo-700 hover:border-indigo-500"
                 }`}
             >
               <input
-                type="checkbox"
-                checked={selectedModules.includes(mod.id)}
-                onChange={() => toggleModuleSelection(mod.id)}
+                type="radio"
+                name="module"
+                checked={selectedModule === mod.id}
+                onChange={() => setSelectedModule(mod.id)}
                 className="w-5 h-5 cursor-pointer accent-indigo-400"
               />
               <div>
@@ -172,11 +164,11 @@ const PayModule = ({ courseId, modules }) => {
       )}
 
       <button
-        disabled={loading || selectedModules.length === 0}
+        disabled={loading || !selectedModule}
         onClick={handleSubmit}
-        className={`w-full py-3 rounded-lg text-white font-semibold transition hover:cursor-pointer
+        className={`w-full py-3 rounded-lg text-white font-semibold transition
           ${
-            loading || selectedModules.length === 0
+            loading || !selectedModule
               ? "bg-indigo-900 cursor-not-allowed"
               : "bg-indigo-500 hover:bg-indigo-600"
           }`}
