@@ -47,35 +47,35 @@ export default function Kurslarim() {
       ) : courses.length === 0 ? (
         <p className="text-gray-400 text-center text-base sm:text-lg">Siz hali hech qanday kurs sotib olmadingiz.</p>
       ) : (
-        <div className="grid gap-5 sm:gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {courses.map((course) => (
             <div
               key={course.id}
-              className="bg-[#0f172a] rounded-2xl p-4 sm:p-5 shadow-md border border-indigo-600 hover:shadow-indigo-500/30 hover:border-indigo-500 transition duration-300 flex flex-col justify-between"
+              className="bg-[#0f172a] rounded-xl p-3 sm:p-4 shadow-md border border-indigo-600 hover:shadow-indigo-500/30 hover:border-indigo-500 transition duration-300 flex flex-col justify-between"
             >
               <div>
                 <img
                   src={course.photo}
                   alt={course.title}
-                  className="w-full h-40 sm:h-48 md:h-52 object-cover rounded-xl mb-4"
+                  className="w-full h-36 sm:h-40 md:h-44 object-cover rounded-lg mb-3"
                 />
-                <div className="flex items-center gap-2 mb-3">
-                  <BookOpen className="text-indigo-500 w-5 h-5" />
-                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white line-clamp-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <BookOpen className="text-indigo-500 w-4 h-4" />
+                  <h3 className="text-sm sm:text-base md:text-lg font-semibold text-white line-clamp-2">
                     {course.title}
                   </h3>
                 </div>
-                <p className="text-gray-300 text-sm sm:text-base leading-relaxed line-clamp-3">
+                <p className="text-gray-400 text-xs sm:text-sm leading-snug line-clamp-2">
                   {course.description}
                 </p>
               </div>
-              <div className="mt-4 flex flex-col sm:flex-row items-center justify-between text-indigo-400 font-semibold text-sm sm:text-base gap-2 sm:gap-0">
+              <div className="mt-3 flex flex-col sm:flex-row items-center justify-between text-indigo-400 font-medium text-xs sm:text-sm gap-2 sm:gap-0">
                 <span>⏱ {course.duration} ta modul</span>
                 <Link
                   href={`/course/${course.id}`}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm sm:text-base w-full sm:w-auto text-center"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md text-xs sm:text-sm w-full sm:w-auto text-center"
                 >
-                  Kursni ko‘rish
+                  Ko‘rish
                 </Link>
               </div>
             </div>
