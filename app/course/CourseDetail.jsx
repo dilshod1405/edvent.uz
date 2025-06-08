@@ -148,7 +148,9 @@ const CourseDetail = () => {
                         className="flex items-center gap-3 text-gray-300 text-sm border-b border-indigo-700 pb-2"
                       >
                         <Video className="w-4 h-4 text-indigo-500" />
-                        <span>{lesson.title}</span>
+                        <Link href={`/lesson/${lesson.id}`} className="hover:underline">
+                            <span>{lesson.title}</span>
+                        </Link>
                         <span className="ml-auto text-indigo-400">
                           ⏱ {lesson.duration}
                         </span>

@@ -142,7 +142,7 @@ const SpecialityDetail = () => {
             <div className="mt-4 flex items-center justify-between text-indigo-400 font-semibold text-sm">
               <span>⏱ {course.duration} ta modul</span>
               <Link
-                href={`/courses/${course.id}`}
+                href={`/course/${course.id}`}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-semibold text-sm tracking-wide transition"
               >
                 Kursga kirish
