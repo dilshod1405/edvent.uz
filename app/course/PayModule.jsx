@@ -156,7 +156,7 @@ const PayModule = ({ courseId, modules }) => {
               aria-pressed={selectedMethod === id}
               type="button"
             >
-              <img src={logo} alt={label} className="h-6 w-auto" />
+              <img src={logo} alt={label} className="h-18 w-auto" />
               <span className="text-white font-medium">{label}</span>
             </button>
           ))}
