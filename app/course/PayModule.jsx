@@ -48,28 +48,36 @@ const PayModule = ({ courseId, modules }) => {
       const token = localStorage.getItem("access");
       if (!token) throw new Error("Avtorizatsiya talab qilinadi.");
 
-      const requests = selectedModules.map((moduleId) => {
-        const mod = modules.find((m) => m.id === moduleId);
-        return axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/payment/transactions/create/`,
-          {
-            course: courseId,
-            module: moduleId,
-            tariff: 0,
-            amount: mod.price,
-            payment_type: selectedMethod,
+      // Hozir uchun faqat birinchi modul uchun to'lov so'rovini yuboramiz
+      // Agar backend bir nechta modulni bitta requestda qabul qilmasa, har birini alohida yuborish kerak
+      const moduleId = selectedModules[0];
+      const mod = modules.find((m) => m.id === moduleId);
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/payment/transactions/create/`,
+        {
+          course: courseId,
+          module: moduleId,
+          tariff: 0,
+          amount: mod.price,
+          payment_type: selectedMethod,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-      });
+        }
+      );
 
-      await Promise.all(requests);
+      // Backenddan to'lov linkini olamiz
+      const paymeLink = response.data.payme_link || response.data.click_link;
 
-      setSuccess("To‘lovlar muvaffaqiyatli boshlaldi. Iltimos, ko‘rsatmalarga amal qiling.");
+      if (paymeLink) {
+        window.location.href = paymeLink;
+      } else {
+        setSuccess("To‘lov yaratildi, ammo to‘lov linki topilmadi.");
+      }
+
       setSelectedModules([]);
     } catch (err) {
       setError(err.response?.data?.detail || err.message || "Noma’lum xatolik yuz berdi.");
@@ -87,7 +95,6 @@ const PayModule = ({ courseId, modules }) => {
 
       const elementTop = element.offsetTop;
 
-      // Agar element ekranga yaqin kelsa va hali animation bo'lmagan bo'lsa
       if (scrollPosition > elementTop + 100 && !hasAnimated) {
         controls.start({
           opacity: 1,
@@ -156,7 +163,7 @@ const PayModule = ({ courseId, modules }) => {
               aria-pressed={selectedMethod === id}
               type="button"
             >
-              <img src={logo} alt={label} className="h-18 w-auto" />
+              <img src={logo} alt={label} className="h-6 w-auto" />
               <span className="text-white font-medium">{label}</span>
             </button>
           ))}
