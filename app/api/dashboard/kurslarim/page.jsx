@@ -35,7 +35,7 @@ export default function Kurslarim() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 md:px-10 lg:px-20 py-8 md:py-12 text-white bg-[#030613]">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 py-8 md:py-12 text-white bg-[#030613] min-h-screen">
         <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-10 text-indigo-400">
           Mening Kurslarim
         </h1>
@@ -45,9 +45,15 @@ export default function Kurslarim() {
             <CircularProgress />
           </div>
         ) : courses.length === 0 ? (
-          <p className="text-gray-400">Siz hali hech qanday kurs sotib olmadingiz.</p>
+          <p className="text-gray-400 text-center">Siz hali hech qanday kurs sotib olmadingiz.</p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 
+            grid-cols-1 
+            sm:grid-cols-1 
+            md:grid-cols-2 
+            lg:grid-cols-3 
+            xl:grid-cols-4"
+          >
             {courses.map((course) => (
               <div
                 key={course.id}
@@ -57,13 +63,16 @@ export default function Kurslarim() {
                   <img
                     src={course.photo}
                     alt={course.title}
-                    className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-xl mb-4"
+                    className="w-full h-36 sm:h-40 md:h-44 lg:h-48 object-cover rounded-xl mb-4"
+                    style={{ minHeight: '144px' }}
                   />
                   <div className="flex items-center gap-2 mb-3">
                     <BookOpen className="text-indigo-500 w-5 h-5 sm:w-6 sm:h-6" />
-                    <h3 className="text-lg sm:text-xl font-semibold text-white">{course.title}</h3>
+                    <h3 className="text-lg sm:text-xl font-semibold text-white line-clamp-2">
+                      {course.title}
+                    </h3>
                   </div>
-                  <p className="text-gray-300 text-sm sm:text-[15px] leading-relaxed line-clamp-5">
+                  <p className="text-gray-300 text-sm sm:text-[15px] leading-relaxed line-clamp-3 sm:line-clamp-5">
                     {course.description}
                   </p>
                 </div>
