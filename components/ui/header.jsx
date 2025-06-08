@@ -15,36 +15,38 @@ export default function Header() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("access");
-      const id = localStorage.getItem("id");
+  const fetchUserData = async () => {
+    const token = localStorage.getItem("access");
+    const id = localStorage.getItem("id");
 
-      if (!token || !id || id === "undefined") {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
-      }
+    if (!token || !id || id === "undefined") {
+      setIsAuthenticated(false);
+      setLoading(false);
+      return;
+    }
 
-      try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/authentication/users/${id}/`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const photoFromStorage = localStorage.getItem("photo");
-        setFirstname(res.data.first_name);
-        setLastname(res.data.last_name);
-        setPhoto(photoFromStorage || "");
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error(error);
-        setIsAuthenticated(false);
-        router.push("/signin");
-      } finally {
-        setLoading(false);
-      }
-    };
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/authentication/users/${id}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    fetchUserData();
-  }, [router]);
+      const photoFromStorage = localStorage.getItem("photo");
+
+      setFirstname(res.data.first_name);
+      setLastname(res.data.last_name);
+      setPhoto(photoFromStorage || "");
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.warn("Token invalid or user fetch failed", error);
++     setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchUserData();
+}, []);
+
 
   if (loading) {
     return (
