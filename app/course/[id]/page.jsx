@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header';
 import Footer from '@/components/ui/footer';
 import axios from 'axios';
-import CourseDetail from './CourseDetail';
+import CourseDetail from '../CourseDetail';
 
 const Page = async ({ params }) => {
   const { id } = params;
