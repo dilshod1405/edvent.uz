@@ -4,7 +4,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import CircularProgress from "@mui/material/CircularProgress";
-import { BadgeCheck, BadgeX, PercentCircle, Layers, Star, School, Book } from "lucide-react";
+import Link from "next/link";
+import {
+  BadgeCheck,
+  BadgeX,
+  PercentCircle,
+  Star,
+  School,
+  Book,
+  ShoppingCart
+} from "lucide-react";
 
 const TariffList = () => {
   const [tariffs, setTariffs] = useState([]);
@@ -90,6 +99,15 @@ const TariffList = () => {
                   )}
                 </div>
               </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <Link
+                href={`/tariffs/${tariff.id}`}
+                className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm tracking-wide transition duration-300 ease-in-out shadow hover:shadow-lg"
+              >
+                <ShoppingCart className="w-4 h-4" /> Xarid qilish
+              </Link>
             </div>
           </motion.div>
         ))}
