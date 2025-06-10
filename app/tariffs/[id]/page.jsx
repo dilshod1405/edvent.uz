@@ -5,7 +5,7 @@ import Footer from '@/components/ui/footer'
 
 const page = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
+    <div>
       <Header />  
       <TariffDetailPage />
       <Footer />

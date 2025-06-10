@@ -46,72 +46,76 @@ const TariffDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#030613] text-white px-6 md:px-20 py-12">
-      <motion.h1
-        className="text-4xl md:text-5xl font-extrabold mb-8 text-indigo-400 text-center"
-        initial={{ opacity: 0, y: -40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        {tariff.title}
-      </motion.h1>
-
-      <div className="text-lg text-gray-300 text-center mb-6">
-        {tariff.speciality?.title} — {tariff.courses.length} ta kurs
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-6 mb-10">
-        <div className="bg-[#1e293b] border border-indigo-600 rounded-2xl p-6 shadow-md">
-          <p className="text-white font-semibold text-xl mb-2">Narxi</p>
-          <p className="text-indigo-300 text-3xl font-bold">
-            {tariff.price.toLocaleString()} so‘m
-          </p>
-          {tariff.discount_percent > 0 && (
-            <p className="text-green-400 font-semibold mt-1">
-              Chegirma: {tariff.discount_percent}%
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-12">
-        <motion.h2
-          className="text-2xl font-semibold text-indigo-400 mb-6"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
+    <div className="min-h-screen bg-[#030613] text-white">
+      <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 md:px-12 lg:px-20 py-12">
+        <motion.h1
+          className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 text-indigo-400 text-center"
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
         >
-          Kurslar ro'yxati
-        </motion.h2>
+          {tariff.title}
+        </motion.h1>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tariff.courses.map((course) => (
-            <motion.div
-              key={course.id}
-              className="bg-[#1e293b] rounded-xl p-4 border border-indigo-700 hover:shadow-lg hover:border-indigo-500 transition"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Image
-                src={course.photo}
-                alt={course.title}
-                width={400}
-                height={200}
-                className="rounded-lg object-cover h-40 w-full mb-4"
-              />
-              <h3 className="text-white font-bold text-lg mb-2">{course.title}</h3>
-              <p className="text-sm text-gray-400 mb-2 line-clamp-3">
-                {course.description}
-              </p>
-              <p className="text-indigo-400 text-sm">⏱ {course.duration} daqiqa</p>
-            </motion.div>
-          ))}
+        <div className="text-base sm:text-lg text-gray-300 text-center mb-6">
+          {tariff.speciality?.title} — {tariff.courses.length} ta kurs
         </div>
-      </div>
 
-      {/* Tariff uchun to‘lov componenti */}
-      <PayTariff tariffId={tariff.id} price={tariff.price} />
+        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-6 mb-10">
+          <div className="bg-[#1e293b] border border-indigo-600 rounded-2xl p-6 shadow-md text-center">
+            <p className="text-white font-semibold text-xl mb-2">Narxi</p>
+            <p className="text-indigo-300 text-3xl font-bold">
+              {tariff.price.toLocaleString()} so‘m
+            </p>
+            {tariff.discount_percent > 0 && (
+              <p className="text-green-400 font-semibold mt-1">
+                Chegirma: {tariff.discount_percent}%
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="mb-12">
+          <motion.h2
+            className="text-2xl font-semibold text-indigo-400 mb-6"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Kurslar ro'yxati
+          </motion.h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tariff.courses.map((course) => (
+              <motion.div
+                key={course.id}
+                className="bg-[#1e293b] rounded-xl p-4 border border-indigo-700 hover:shadow-lg hover:border-indigo-500 transition"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="relative w-full h-32 sm:h-40 mb-4">
+                  <Image
+                    src={course.photo}
+                    alt={course.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+                <h3 className="text-white font-bold text-lg mb-2">{course.title}</h3>
+                <p className="text-sm text-gray-400 mb-2 line-clamp-3">
+                  {course.description}
+                </p>
+                <p className="text-indigo-400 text-sm">⏱ {course.duration} daqiqa</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tariff uchun to‘lov componenti */}
+        <PayTariff tariffId={tariff.id} price={tariff.price} />
+      </div>
     </div>
   );
 };
