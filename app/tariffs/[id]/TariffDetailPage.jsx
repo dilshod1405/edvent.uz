@@ -107,7 +107,7 @@ const TariffDetailPage = () => {
                 <p className="text-sm text-gray-400 mb-2 line-clamp-3">
                   {course.description}
                 </p>
-                <p className="text-indigo-400 text-sm">⏱ {course.duration} daqiqa</p>
+                <p className="text-indigo-400 text-sm">⏱ {course.duration} ta modul</p>
               </motion.div>
             ))}
           </div>
