@@ -1,15 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,  // agar bor bo‘lsa
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'i.pinimg.com',  // i.pinimg.com dan rasm olish
-        pathname: '/**',  // barcha yo‘nalishlar
+        hostname: 'i.pinimg.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'archedu.uz',
+        pathname: '/**',
       },
     ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
