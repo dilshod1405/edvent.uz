@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import ChatMessage from './ChatMessage';
+import { jwtDecode } from 'jwt-decode';
 
 export default function ChattingTab({ lessonId }) {
   const [messages, setMessages] = useState([]);
