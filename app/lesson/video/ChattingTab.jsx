@@ -85,6 +85,10 @@ export default function ChattingTab({ lessonId }) {
       const room = `chat_${Math.min(userId, supportId)}_${Math.max(userId, supportId)}`;
       socket.emit('join_private_chat', { room });
       console.log(`🔑 ${room} xonasiga ulanish`);
+      if (!supportId) {
+        console.warn("❗ supportId aniqlanmagan");
+        return;
+      }
     });
 
     socket.on('connect_error', (err) => {
