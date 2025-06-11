@@ -60,6 +60,8 @@ export default function ChattingTab({ lessonId }) {
     })
       .then(res => {
         setSupportId(res.data?.id);
+        console.log("Support ID:", res.data?.id);
+        
       })
       .catch(err => {
         console.error("Support ID olishda xato:", err);
