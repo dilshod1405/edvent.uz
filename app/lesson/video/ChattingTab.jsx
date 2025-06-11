@@ -59,7 +59,6 @@ export default function ChattingTab({ lessonId }) {
     })
       .then(res => {
         setSupportId(res.data?.id);
-        console.log("Support ID:", res.data?.id);
         
       })
       .catch(err => {
@@ -85,6 +84,7 @@ export default function ChattingTab({ lessonId }) {
       // 🎯 Har bir student-support uchun room
       const room = `chat_${Math.min(userId, supportId)}_${Math.max(userId, supportId)}`;
       socket.emit('join_private_chat', { room });
+      console.log(`🔑 ${room} xonasiga ulanish`);
     });
 
     socket.on('connect_error', (err) => {
