@@ -1,4 +1,3 @@
-// components/ChattingTab.jsx
 'use client';
 
 import { useEffect, useRef, useState, useMemo } from 'react';
@@ -11,36 +10,36 @@ import ChatMessage from './ChatMessage';
 
 export default function ChattingTab({ lessonId }) {
   const [messages, setMessages] = useState([]);
-  const [input, setInput]     = useState('');
+  const [input, setInput] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef(null);
-  const endRef    = useRef(null);
-  const audioRef  = useRef(null);
+  const endRef = useRef(null);
+  const audioRef = useRef(null);
 
-  // Token & userId
-  const token  = typeof window !== 'undefined' ? localStorage.getItem('access') : null;
+  const token = typeof window !== 'undefined' ? localStorage.getItem('access') : null;
   const userId = useMemo(() => {
     if (!token) return null;
-    try { return jwtDecode(token).user_id; } catch { return null; }
+    try {
+      return jwtDecode(token).user_id;
+    } catch {
+      return null;
+    }
   }, [token]);
 
-  // Preload audio
   useEffect(() => {
     audioRef.current = new Audio('/sounds/message.mp3');
   }, []);
 
-  // Load initial messages via REST API
   useEffect(() => {
     if (!lessonId || !token) return;
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chat/messages`, {
       params: { lesson: lessonId },
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
-    .then(res => setMessages(res.data))
-    .catch(err => console.error('❌ Load messages error:', err));
+      .then(res => setMessages(res.data))
+      .catch(err => console.error('❌ Load messages error:', err));
   }, [lessonId, token]);
 
-  // WebSocket connect & join room
   useEffect(() => {
     if (!lessonId || !token || !userId) return;
 
@@ -50,27 +49,35 @@ export default function ChattingTab({ lessonId }) {
     });
     socketRef.current = socket;
 
-    // After server acknowledges join
-    socket.on('joined', () => setIsConnected(true));
+    socket.on('connect', () => {
+      console.log('✅ Socket connected:', socket.id);
+    });
 
-    socket.on('new_message', data => {
+    socket.on('joined', () => {
+      console.log('🔒 Room joined');
+      setIsConnected(true);
+    });
+
+    socket.on('new_message', (data) => {
       if (Number(data.senderId) !== Number(userId)) {
         audioRef.current?.play();
       }
       setMessages(prev => [...prev, data]);
     });
 
-    return () => { socket.disconnect(); };
+    socket.on('connect_error', err => {
+      console.error('❌ Socket connection error:', err.message);
+    });
+
+    return () => socket.disconnect();
   }, [lessonId, token, userId]);
 
-  // Auto-scroll on new messages
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Send message
   const handleSend = () => {
-    if (!input.trim() || !socketRef.current?.connected || !isConnected) return;
+    if (!input.trim() || !isConnected || !socketRef.current?.connected) return;
     socketRef.current.emit('send_message', { content: input });
     setInput('');
   };
