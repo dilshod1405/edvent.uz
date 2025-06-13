@@ -29,44 +29,38 @@ export default function ChattingTab({ lessonId }) {
     }
   }, [token]);
 
-  // 🔊 Audio fayl yuklash
   useEffect(() => {
     audioRef.current = new Audio('/sounds/message.mp3');
   }, []);
 
-  // 📨 Xabarlar olish (dastlab)
+  // Initial messages
   useEffect(() => {
     if (!lessonId || !token) return;
 
     axios.get(`${process.env.NEXT_PUBLIC_API_URL_SOCKET}/chat/messages`, {
       params: { lesson: lessonId },
       headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => {
-        setMessages(res.data);
-      })
-      .catch(err => {
-        console.error('Xabarlarni yuklashda xato:', err);
-      });
+    }).then(res => {
+      setMessages(res.data);
+    }).catch(err => {
+      console.error('❗ Message load error:', err);
+    });
   }, [lessonId, token]);
 
-  // 🎓 Support teacher ID olish
+  // Support ID
   useEffect(() => {
     if (!lessonId || !token) return;
 
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/lessons/${lessonId}/support/`, {
       headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => {
-        setSupportId(res.data?.id);
-        
-      })
-      .catch(err => {
-        console.error("Support ID olishda xato:", err);
-      });
+    }).then(res => {
+      setSupportId(res.data?.id);
+    }).catch(err => {
+      console.error("❌ Support ID fetch error:", err);
+    });
   }, [lessonId, token]);
 
-  // 🔌 Socket ulanishi
+  // WebSocket connection
   useEffect(() => {
     if (!lessonId || !token || !userId || !supportId) return;
 
@@ -78,21 +72,12 @@ export default function ChattingTab({ lessonId }) {
     socketRef.current = socket;
 
     socket.on('connect', () => {
-      console.log('✅ Socket.io ulandi');
       setIsConnected(true);
-
-      // 🎯 Har bir student-support uchun room
       const room = `chat_${Math.min(userId, supportId)}_${Math.max(userId, supportId)}`;
       socket.emit('join_private_chat', { room });
     });
 
-    socket.on('connect_error', (err) => {
-      console.error('❗ connect_error:', err.message);
-      console.error('🔍 Full error:', err);
-    });
-
     socket.on('new_message', (data) => {
-      console.log('🔔 Yangi xabar:', data);
       if (Number(data.senderId) !== Number(userId)) {
         audioRef.current?.play();
       }
@@ -100,34 +85,21 @@ export default function ChattingTab({ lessonId }) {
     });
 
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('new_message');
       socket.disconnect();
     };
   }, [lessonId, token, userId, supportId]);
 
-  // 🔻 Scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // 📤 Xabar yuborish
   const handleSend = () => {
     if (!input.trim()) return;
-
     const socket = socketRef.current;
-    if (!socket || !socket.connected || !supportId) {
-      console.error('Socket ulangan emas yoki supportId yo‘q');
-      return;
+    if (socket?.connected) {
+      socket.emit('send_message', { content: input });
+      setInput('');
     }
-
-    socket.emit('send_message', {
-      content: input,
-      receiverId: supportId, // 🔥 kerakli qo‘shimcha
-    });
-
-    setInput('');
   };
 
   return (
@@ -158,7 +130,7 @@ export default function ChattingTab({ lessonId }) {
         <button
           onClick={handleSend}
           disabled={!isConnected}
-          className={`px-4 rounded-r-md flex items-center hover:cursor-pointer text-white ${
+          className={`px-4 rounded-r-md flex items-center text-white ${
             isConnected ? 'bg-[#4F39F6] hover:bg-[#3a2fd9]' : 'bg-gray-600 cursor-not-allowed'
           }`}
         >
