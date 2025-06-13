@@ -13,7 +13,6 @@ export default function ChattingTab({ lessonId }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput]     = useState('');
   const [isConnected, setIsConnected] = useState(false);
-  const [supportId, setSupportId]     = useState(null);
   const socketRef = useRef(null);
   const endRef    = useRef(null);
   const audioRef  = useRef(null);
@@ -22,11 +21,7 @@ export default function ChattingTab({ lessonId }) {
   const token  = typeof window !== 'undefined' ? localStorage.getItem('access') : null;
   const userId = useMemo(() => {
     if (!token) return null;
-    try {
-      return jwtDecode(token).user_id;
-    } catch {
-      return null;
-    }
+    try { return jwtDecode(token).user_id; } catch { return null; }
   }, [token]);
 
   // Preload audio
@@ -34,10 +29,10 @@ export default function ChattingTab({ lessonId }) {
     audioRef.current = new Audio('/sounds/message.mp3');
   }, []);
 
-  // Load initial messages
+  // Load initial messages via REST API
   useEffect(() => {
     if (!lessonId || !token) return;
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL_SOCKET}/chat/messages`, {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chat/messages`, {
       params: { lesson: lessonId },
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -45,19 +40,9 @@ export default function ChattingTab({ lessonId }) {
     .catch(err => console.error('❌ Load messages error:', err));
   }, [lessonId, token]);
 
-  // Fetch supportId (for display if needed)
+  // WebSocket connect & join room
   useEffect(() => {
-    if (!lessonId || !token) return;
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/education/lessons/${lessonId}/support/`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => setSupportId(res.data?.id))
-    .catch(err => console.error('❌ Support fetch error:', err));
-  }, [lessonId, token]);
-
-  // WebSocket connect
-  useEffect(() => {
-    if (!lessonId || !token || !userId || !supportId) return;
+    if (!lessonId || !token || !userId) return;
 
     const socket = io(process.env.NEXT_PUBLIC_API_SOCKET_URL, {
       auth: { token, lessonId },
@@ -65,9 +50,8 @@ export default function ChattingTab({ lessonId }) {
     });
     socketRef.current = socket;
 
-    socket.on('connect', () => {
-      setIsConnected(true);
-    });
+    // After server acknowledges join
+    socket.on('joined', () => setIsConnected(true));
 
     socket.on('new_message', data => {
       if (Number(data.senderId) !== Number(userId)) {
@@ -76,19 +60,17 @@ export default function ChattingTab({ lessonId }) {
       setMessages(prev => [...prev, data]);
     });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, [lessonId, token, userId, supportId]);
+    return () => { socket.disconnect(); };
+  }, [lessonId, token, userId]);
 
-  // Auto-scroll
+  // Auto-scroll on new messages
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Send handler
+  // Send message
   const handleSend = () => {
-    if (!input.trim() || !socketRef.current?.connected) return;
+    if (!input.trim() || !socketRef.current?.connected || !isConnected) return;
     socketRef.current.emit('send_message', { content: input });
     setInput('');
   };
@@ -110,13 +92,13 @@ export default function ChattingTab({ lessonId }) {
 
       <div className="flex mt-4">
         <input
-          className="flex-1 bg-[#1C2833] border border-[#4F39F6] text-white px-4 py-2 rounded-l-md focus:outline-none"
           type="text"
           placeholder="Savolingizni yozing..."
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
           disabled={!isConnected}
+          className="flex-1 bg-[#1C2833] border border-[#4F39F6] px-4 py-2 rounded-l-md text-white focus:outline-none"
         />
         <button
           onClick={handleSend}
@@ -131,4 +113,3 @@ export default function ChattingTab({ lessonId }) {
     </div>
   );
 }
-
