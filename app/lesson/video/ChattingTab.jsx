@@ -20,13 +20,8 @@ export default function ChattingTab({ lessonId }) {
 
   const userId = useMemo(() => {
   if (!token) return null;
-  try {
-    const decodedToken = jwtDecode(token);
-    console.log('Decoded token:', decodedToken);
-    return decodedToken.user_id;
-  } catch {
-    return null;
-  }
+  const decodedToken = jwtDecode(token);
+  return decodedToken.id;
 }, [token]);
 
   // Load notification sound
