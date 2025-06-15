@@ -46,7 +46,7 @@ export default function ChattingTab({ lessonId }) {
   // Handle Socket.IO connection
   useEffect(() => {
     if (!lessonId || !token || !userId) {
-      console.warn('❌ token, lessonId yoki userId yo‘q');
+      console.warn('❌ token, lessonId yoki userId yo‘q', { token, lessonId, userId });
       return;
     }
 
