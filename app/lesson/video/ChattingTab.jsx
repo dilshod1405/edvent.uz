@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import jwtDecode from 'jwt-decode';
 import SendIcon from '@mui/icons-material/Send';
 import { AnimatePresence } from 'framer-motion';
@@ -12,44 +12,53 @@ export default function ChattingTab({ lessonId }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+  const [token, setToken] = useState(null);
+  const [userId, setUserId] = useState(null);
   const socketRef = useRef(null);
   const endRef = useRef(null);
   const audioRef = useRef(null);
 
-  const token = typeof window !== 'undefined' ? localStorage.getItem('access') : null;
+  // LocalStorage'dan token olish va userId ajratib olish
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const accessToken = localStorage.getItem('access');
+      if (accessToken) {
+        setToken(accessToken);
+        try {
+          const decoded = jwtDecode(accessToken);
+          setUserId(decoded.id); // yoki decoded.user_id
+        } catch (err) {
+          console.error('❌ JWT decode error:', err);
+        }
+      }
+    }
+  }, []);
 
-  const userId = useMemo(() => {
-  if (!token) return null;
-  const decodedToken = jwtDecode(token);
-  return decodedToken.id;
-}, [token]);
+  // Xabarlar tarixi olish
+  useEffect(() => {
+    if (!lessonId || !token) return;
 
-  // Load notification sound
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/chat/messages`, {
+        params: { lesson: lessonId },
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setMessages(res.data))
+      .catch((err) => console.error('❌ Load messages error:', err));
+  }, [lessonId, token]);
+
+  // Notification audio
   useEffect(() => {
     audioRef.current = new Audio('/sounds/message.mp3');
   }, []);
 
-  // Load chat history
+  // Socket.IO ulanishi
   useEffect(() => {
-    if (!lessonId || !token) return;
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chat/messages`, {
-      params: { lesson: lessonId },
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => setMessages(res.data))
-      .catch(err => console.error('❌ Load messages error:', err));
-  }, [lessonId, token]);
-
-  // Handle Socket.IO connection
-  useEffect(() => {
-    if (!lessonId || !token || !userId) {
-      console.warn('❌ token, lessonId yoki userId yo‘q', { token, lessonId, userId });
-      return;
-    }
+    if (!lessonId || !token || !userId) return;
 
     const socket = io(process.env.NEXT_PUBLIC_API_SOCKET_URL, {
       auth: { token, lessonId },
-      transports: ['websocket']
+      transports: ['websocket'],
     });
 
     socketRef.current = socket;
@@ -67,10 +76,10 @@ export default function ChattingTab({ lessonId }) {
       if (Number(data.senderId) !== Number(userId)) {
         audioRef.current?.play();
       }
-      setMessages(prev => [...prev, data]);
+      setMessages((prev) => [...prev, data]);
     });
 
-    socket.on('connect_error', err => {
+    socket.on('connect_error', (err) => {
       console.error('❌ Socket connection error:', err.message);
       setIsConnected(false);
     });
@@ -82,7 +91,7 @@ export default function ChattingTab({ lessonId }) {
     };
   }, [lessonId, token, userId]);
 
-  // Auto scroll to last message
+  // Scroll to latest message
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -90,16 +99,15 @@ export default function ChattingTab({ lessonId }) {
   const handleSend = () => {
     if (!input.trim() || !isConnected || !socketRef.current?.connected) return;
 
-    // Optimistic UI
     const msgData = {
       content: input,
       senderId: userId,
       lessonId,
-      receiverId: null, // Backend fills this
-      timestamp: new Date().toISOString()
+      receiverId: null,
+      timestamp: new Date().toISOString(),
     };
 
-    setMessages(prev => [...prev, msgData]);
+    setMessages((prev) => [...prev, msgData]);
     socketRef.current.emit('send_message', { content: input });
     setInput('');
   };
@@ -124,8 +132,8 @@ export default function ChattingTab({ lessonId }) {
           type="text"
           placeholder="Savolingizni yozing..."
           value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSend()}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           disabled={!isConnected}
           className="flex-1 bg-[#1C2833] border border-[#4F39F6] px-4 py-2 rounded-l-md text-white focus:outline-none"
         />
