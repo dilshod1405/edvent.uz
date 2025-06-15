@@ -17,6 +17,7 @@ export default function ChattingTab({ lessonId }) {
   const audioRef = useRef(null);
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('access') : null;
+
   const userId = useMemo(() => {
     if (!token) return null;
     try {
@@ -26,10 +27,12 @@ export default function ChattingTab({ lessonId }) {
     }
   }, [token]);
 
+  // Load notification sound
   useEffect(() => {
     audioRef.current = new Audio('/sounds/message.mp3');
   }, []);
 
+  // Load chat history
   useEffect(() => {
     if (!lessonId || !token) return;
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chat/messages`, {
@@ -40,13 +43,18 @@ export default function ChattingTab({ lessonId }) {
       .catch(err => console.error('❌ Load messages error:', err));
   }, [lessonId, token]);
 
+  // Handle Socket.IO connection
   useEffect(() => {
-    if (!lessonId || !token || !userId) return;
+    if (!lessonId || !token || !userId) {
+      console.warn('❌ token, lessonId yoki userId yo‘q');
+      return;
+    }
 
     const socket = io(process.env.NEXT_PUBLIC_API_SOCKET_URL, {
       auth: { token, lessonId },
       transports: ['websocket']
     });
+
     socketRef.current = socket;
 
     socket.on('connect', () => {
@@ -67,17 +75,34 @@ export default function ChattingTab({ lessonId }) {
 
     socket.on('connect_error', err => {
       console.error('❌ Socket connection error:', err.message);
+      setIsConnected(false);
     });
 
-    return () => socket.disconnect();
+    return () => {
+      if (socketRef.current?.connected) {
+        socketRef.current.disconnect();
+      }
+    };
   }, [lessonId, token, userId]);
 
+  // Auto scroll to last message
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSend = () => {
     if (!input.trim() || !isConnected || !socketRef.current?.connected) return;
+
+    // Optimistic UI
+    const msgData = {
+      content: input,
+      senderId: userId,
+      lessonId,
+      receiverId: null, // Backend fills this
+      timestamp: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, msgData]);
     socketRef.current.emit('send_message', { content: input });
     setInput('');
   };
@@ -88,7 +113,7 @@ export default function ChattingTab({ lessonId }) {
         <AnimatePresence>
           {messages.map((msg, idx) => (
             <ChatMessage
-              key={idx}
+              key={msg._id || idx}
               msg={msg}
               isUser={Number(msg.senderId) === Number(userId)}
             />
@@ -117,6 +142,12 @@ export default function ChattingTab({ lessonId }) {
           <SendIcon />
         </button>
       </div>
+
+      {!isConnected && (
+        <p className="text-red-400 text-sm mt-2">
+          Ulanishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.
+        </p>
+      )}
     </div>
   );
 }
