@@ -19,13 +19,15 @@ export default function ChattingTab({ lessonId }) {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access') : null;
 
   const userId = useMemo(() => {
-    if (!token) return null;
-    try {
-      return jwtDecode(token).user_id;
-    } catch {
-      return null;
-    }
-  }, [token]);
+  if (!token) return null;
+  try {
+    const decodedToken = jwtDecode(token);
+    console.log('Decoded token:', decodedToken);
+    return decodedToken.user_id;
+  } catch {
+    return null;
+  }
+}, [token]);
 
   // Load notification sound
   useEffect(() => {
