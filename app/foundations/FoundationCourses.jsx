@@ -44,7 +44,7 @@ const FoundationCourses = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        Asosiy (Foundation) Kurslar
+        Fundamental Kurslar
       </motion.h1>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
@@ -74,7 +74,7 @@ const FoundationCourses = () => {
             <div className="mt-6 flex items-center justify-between text-indigo-400 font-semibold text-sm">
               <span>🎓 {course.teacher?.name}</span>
               <Link
-                href={`/course/${course.id}`}
+                href={`/foundations/${course.id}`}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-semibold text-sm tracking-wide transition"
               >
                 Batafsil
