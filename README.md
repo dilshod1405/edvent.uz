@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Edvent.uz
+
+Edvent.uz is an online education platform that provides users with access to various courses and modules to enhance their skills and knowledge.
+
+---
+
+## Project Overview
+
+- User registration and authentication
+- Specialized courses and modules
+- Integrated payment system (Payme, Click)
+- Real-time support chat
+- Intuitive and modern user interface
+
+---
+
+## Key Features
+
+- User profile management
+- Course listing with filters by speciality
+- Viewing modules and lessons
+- Payment processing
+- Support chat
+- Admin panel
+
+---
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the backend and frontend repositories
+2. Create a `.env` file and add necessary environment variables (API URLs, payment keys, etc.)
+3. Run the project using Docker:
+    ```bash
+    docker-compose up -d
+    ```
+4. Open your browser and navigate to http://localhost:3000 to start using the platform
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Screenshots
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+![Page 1](https://i.ibb.co/cqrSSGB/image-2025-06-28-00-13-57.png)
+![Page 2](https://i.ibb.co/sJPX5yt6/image-2025-06-28-00-14-13.png)
+![Page 3](https://i.ibb.co/B2VTfGMp/image-2025-06-28-00-14-25.png)
+![Page 4](https://i.ibb.co/FbhVWgp2/image-2025-06-28-00-14-39.png)
+![Page 5](https://i.ibb.co/d0NnXZ24/image-2025-06-28-00-14-49.png)
+![Page 6](https://i.ibb.co/1JZcnGwx/image-2025-06-28-00-15-06.png)
+![Page 7](https://i.ibb.co/gMW8K1DR/image-2025-06-28-00-15-23.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Technologies Used
 
-To learn more about Next.js, take a look at the following resources:
+- Django Rest Framework (Backend)
+- Next.js (Frontend)
+- PostgreSQL (Database)
+- Docker
+- Tailwind CSS
+- Socket.IO (Real-time chat)
+- Payme and Click (Payment systems)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Author
 
-## Deploy on Vercel
+Dilshodjon Normurodov — Lead Developer
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+
+Email: www.edvent.uz@gmail.com
+Telegram: @architect_developer
